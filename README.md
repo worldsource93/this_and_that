@@ -702,7 +702,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 - 7.2 IIFE(immediately invoked function expressions, 즉시실행함수)를 괄호로 묶자. eslint: <a href="https://eslint.org/docs/rules/wrap-iife.html" target="_blank">`wrap-iife`</a>
 
-  > 거의 모든 IIFE는 모듈로 대체 가능하다.
+  > IIFE는 단일 단위이므로 이를 포장하여 깔끔하게 표현하자. 거의 모든 IIFE는 모듈로 대체 가능하다.
 
   ```
   // immediately-invoked function expression (IIFE)
@@ -714,3 +714,81 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 ☝ [목록으로 돌아가기](#목록)
 
 ---
+
+- 7.3 함수블록이 아닌 곳(`if`, `while`, etc...)에 함수를 선언하지마라. 대신 함수를 변수에 할당하자. 브라우저는 우리가 그렇게 할 수 있도록 해주지만 안타깝게도 브라우저 별로 다르게 해석한다. eslint: <a href="https://eslint.org/docs/rules/no-loop-func.html" target="_blank">`no-loop-func`</a>
+
+- 7.4 ECMA-262는 `block`을 문(statement)의 한 종류로 정의하고 있다. 함수 선언은 문이 아닙니다.
+
+  ```
+  // bad
+  if (currentUser) {
+    function test() {
+      console.log('Nope.');
+    }
+  }
+
+  // good
+  let test;
+  if (currentUser) {
+    test = () => {
+      console.log('Yup.');
+    };
+  }
+  ```
+
+- 7.5 매개변수 이름을 `arguments`라 지정하지 말자. 이는 모든 함수 범위에 주어진 `arguments` 객체보다 우선한다.
+
+  ```
+  // bad
+  function foo(name, options, arguments) {
+    // ...
+  }
+
+  // good
+  function foo(name, options, args) {
+    // ...
+  }
+  ```
+
+- 7.6 `arguments`를 사용하지말고 rest 구문인 `...`를 대신 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-rest-params" target="_blank">`prefer-rest-params`</a>
+
+  > `...`는 개발자가 원하는 것을 명백하게 표현할 수 있다. 또한, 나머지 parameter는 유사 배열이 아닌 실제 배열이다.
+
+  ```
+  // bad
+  function concatenateAll() {
+    const args = Array.prototype.slice.call(arguments);
+    return args.join('');
+  }
+
+  // good
+  function concatenateAll(...args) {
+    return args.join('');
+  }
+  ```
+
+- 7.7 변형되는 함수 parameter 대신 기본 매개 변수 구문을 사용하자.
+
+  ```
+  // really bad
+  function handleThings(opts) {
+    // No! We shouldn’t mutate function arguments.
+    // Double bad: if opts is falsy it'll be set to an object which   may
+    // be what you want but it can introduce subtle bugs.
+    opts = opts || {};
+    // ...
+  }
+
+  // still bad
+  function handleThings(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+    // ...
+  }
+
+  // good
+  function handleThings(opts = {}) {
+    // ...
+  }
+  ```
