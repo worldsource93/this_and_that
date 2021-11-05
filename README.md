@@ -792,3 +792,143 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     // ...
   }
   ```
+
+- 7.8 기본 변수 설정의 부작용을 회피하자.
+
+  > 그것은 판단에 혼란을 준다.
+
+  ```
+  var b = 1;
+  // bad
+  function count(a = b++) {
+    console.log(a);
+  }
+  count();  // 1
+  count();  // 2
+  count(3); // 3
+  count();  // 3
+  ```
+
+- 7.9 항상 기본값 설정은 마지막에 하자. eslint: <a href="https://eslint.org/docs/rules/default-param-last" target="_blank">`default-param-last`</a>
+
+  ```
+  // bad
+  function handleThings(opts = {}, name) {
+    // ...
+  }
+
+  // good
+  function handleThings(name, opts = {}) {
+    // ...
+  }
+  ```
+
+- 7.10 Function constructor를 사용하여 새로운 함수를 생성하지 마라. eslint: <a href="https://eslint.org/docs/rules/no-new-func" target="_blank">`no-new-func`</a>
+
+  > 이러한 방식으로 새로운 함수를 생성하는 것은 `eval()`과 유사하게 문자열을 평가하여 취약성이 생기게된다.
+
+  ```
+  // bad
+  var add = new Function('a', 'b', 'return a + b');
+
+  // still bad
+  var subtract = Function('a', 'b', 'return a - b');
+  ```
+
+- 7.11 function signature는 띄어쓰자. eslint: <a href="https://eslint.org/docs/rules/space-before-function-paren" target="_blank">`space-before-function-paren`</a>, <a href="https://eslint.org/docs/rules/space-before-blocks" target="_blank">`space-before-blocks`</a>
+
+  > 일관성이 있고 이름을 수정할 때, 공백을 추가하거나 제거할 필요가 없다.
+
+  ```
+  // bad
+  const f = function(){};
+  const g = function (){};
+  const h = function() {};
+
+  // good
+  const x = function () {};
+  const y = function a() {};
+  ```
+
+- 7.12 매개변수를 변형시키지 마라. eslint: <a href="https://eslint.org/docs/rules/no-param-reassign.html" target="_blank">`no-param-reassign`</a>
+
+  > 매개변수로 전달된 객체를 조작하는 것은 원본에 의도치 않은 side effects를 발생 시킬 수 있다.
+
+  ```
+  // bad
+  function f1(obj) {
+    obj.key = 1;
+  }
+
+  // good
+  function f2(obj) {
+    const key = Object.prototype.hasOwnProperty.call(obj, 'key') ? obj.key : 1;
+  }
+  ```
+
+- 7.13 매개변수를 재할당하지마라. eslint: <a href="https://eslint.org/docs/rules/no-param-reassign.html" target="_blank">`no-param-reassign`</a>
+
+> 매개변수를 재할당하는 것은 예기치 않은 동작으로 연결될 수 있다.(특히, `arguments` object에 접근할 때) 이것은 최적화 문제를 발생시킬 수 있다.(특히, <a href="https://engineering.huiseoul.com/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%82%B4%EB%B6%80-%EC%B5%9C%EC%A0%81%ED%99%94%EB%90%9C-%EC%BD%94%EB%93%9C%EB%A5%BC-%EC%9E%91%EC%84%B1%EC%9D%84-%EC%9C%84%ED%95%9C-%EB%8B%A4%EC%84%AF-%EA%B0%80%EC%A7%80-%ED%8C%81-6c6f9832c1d9" target="_blank">`V8`</a>에서)
+
+```
+// bad
+function f1(a) {
+  a = 1;
+  // ...
+}
+
+function f2(a) {
+  if (!a) { a = 1; }
+  // ...
+}
+
+// good
+function f3(a) {
+  const b = a || 1;
+  // ...
+}
+
+function f4(a = 1) {
+  // ...
+}
+```
+
+- 7.14
+
+- 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 합니다.
+
+```
+// bad
+function foo(bar,
+             baz,
+             quux) {
+  // ...
+}
+
+// good
+function foo(
+  bar,
+  baz,
+  quux,
+) {
+  // ...
+}
+
+// bad
+console.log(foo,
+  bar,
+  baz);
+
+// good
+console.log(
+  foo,
+  bar,
+  baz,
+);
+```
+
+☝ [목록으로 돌아가기](#목록)
+
+---
+
+## Arrow Fucntions
