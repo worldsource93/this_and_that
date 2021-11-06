@@ -14,6 +14,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 ## 목록
 
+1. [Doodling Notes](#📝doodling-notes)
 1. [Types](#types)
 1. [References](#references)
 1. [Objects](#objects)
@@ -53,6 +54,73 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 1. Contributors
 1. License
 1. Amendments
+
+---
+
+## 📝Doodling Notes
+
+🙊단어 및 개념정리
+
+- ### 문(Statement)과 표현식(Expressions)
+
+  - 자바스크립트에서 `Statement`와 `Expression`은 아주 중요한 차이가 있으므로 명확하게 구분해야한다.
+
+    <img src="https://media.vlpt.us/images/_uchanlee/post/b935aaa6-02ff-49e4-8086-407d813c1387/statement_expression-diagram.svg" width=150>
+
+  <br />
+
+  > ## Statement
+  >
+  > - 문
+  > - 실행 가능한 최소의 독립적인 코드 조각
+  > - statement는 흔히 한 개 이상의 expression 이나 프로그래밍 키워드를 포함하는 경우가 많다.
+  > - 모든 문은 완료 값을 가진다. 값이 undefined 일수도 있다.
+
+  <br />
+
+  ```
+  for (let i = 0; i < 10; i++) {} // for statement
+
+  while (true) {} // while statement
+
+  if (true) {} // if statement
+
+  let a; // declaration statement
+
+  function b() {} // function declaration statement
+  ```
+
+  > ## Expression
+  >
+  > - 표현식
+  > - 특정 결과값이 계산되는 것
+
+  <br />
+
+  ```
+  let a = 3 * 5; // 1번
+  let b = a; // 2번
+  b; // 3번
+  ```
+
+  1.  - `3 * 5`는 15라는 값으로 평가되는 표현식이다. <br />
+      - `let a = 3 * 5;` 문은 변수를 선언하므로 선언문(Declaration Statement)이라 한다.
+      - 앞에 변수형태를 적지 않는다면, 할당 표현식(Assignment Expression)이라고 한다. ex) `a = 3 * 5;`
+
+  1.  - `let b = a;`문도 변수를 선언하므로 선언문이다.
+      - a라는 표현식은 당시 변수들에 저장된 값으로 평가되므로 15라는 값으로 평가되고 역시 b는 15가 된다.
+  1.  - b가 표현식의 전부지만 이것만으로도 완전한 문이다.
+      - 일반적으로 이런 문은 표현식 문(Expression Statement)라고 부른다.
+
+  > ## Syntactic sugar
+  >
+  > - 문법에 설탕을 뿌려 더 달콤하게 사용한다는 의미이다. 문법적으로 더 읽기 쉽고 이해하기 편하도록 표현되어지는 것을 말하는 것으로 적절하게 사용되면 가독성을 높이기 매우 좋다.
+  > - 대표적인 예
+  >   - Javascript의 ES6부터 추가된 Class의 표현법
+  >   - 람다식의 간결한 표현
+  > - Syntactic sugar의 장점은 ES6부터 추가된 Class의 경우에서 쉽게 찾아볼 수 있다. ES6의 Class가 기존 javascript의 함수체계와 다른 새로운 객체지향모델을 제공하는것이 아니라 기존 함수패턴의 Syntactic sugar로써 클래스 기반 언어에 익숙한 프로그래머들도 보다 빨리 학습하고 알아보기 쉽게하며 더욱 직관적인 표현이 가능해진다.
+
+☝ [목록으로 돌아가기](#목록)
 
 ---
 
@@ -717,7 +785,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 - 7.3 함수블록이 아닌 곳(`if`, `while`, etc...)에 함수를 선언하지마라. 대신 함수를 변수에 할당하자. 브라우저는 우리가 그렇게 할 수 있도록 해주지만 안타깝게도 브라우저 별로 다르게 해석한다. eslint: <a href="https://eslint.org/docs/rules/no-loop-func.html" target="_blank">`no-loop-func`</a>
 
-- 7.4 ECMA-262는 `block`을 문(statement)의 한 종류로 정의하고 있다. 함수 선언은 문이 아닙니다.
+- 7.4 ECMA-262는 `block`을 문(statement)의 한 종류로 정의하고 있다. 함수 선언은 문이 아닙니다. Doodling notes: [Statement](#statement), [Expression](#expression)
 
   ```
   // bad
@@ -868,67 +936,204 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 - 7.13 매개변수를 재할당하지마라. eslint: <a href="https://eslint.org/docs/rules/no-param-reassign.html" target="_blank">`no-param-reassign`</a>
 
-> 매개변수를 재할당하는 것은 예기치 않은 동작으로 연결될 수 있다.(특히, `arguments` object에 접근할 때) 이것은 최적화 문제를 발생시킬 수 있다.(특히, <a href="https://engineering.huiseoul.com/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%8A%94-%EC%96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%80-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%82%B4%EB%B6%80-%EC%B5%9C%EC%A0%81%ED%99%94%EB%90%9C-%EC%BD%94%EB%93%9C%EB%A5%BC-%EC%9E%91%EC%84%B1%EC%9D%84-%EC%9C%84%ED%95%9C-%EB%8B%A4%EC%84%AF-%EA%B0%80%EC%A7%80-%ED%8C%81-6c6f9832c1d9" target="_blank">`V8`</a>에서)
+  > 매개변수를 재할당하는 것은 예기치 않은 동작으로 연결될 수 있다.(특히, `arguments` object에 접근할 때) 이것은 최적화 문제를 발생시킬 수 있다. (특히, <a href="https://engineering.huiseoul.com/  %EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%8A%94-%EC%  96%B4%EB%96%BB%EA%B2%8C-%EC%9E%91%EB%8F%99%ED%95%98%EB%8A%94%EA%B0%8  0-v8-%EC%97%94%EC%A7%84%EC%9D%98-%EB%82%B4%EB%B6%80-%EC%B5%9C%EC%A0%  81%ED%99%94%EB%90%9C-%EC%BD%94%EB%93%9C%EB%A5%BC-%EC%9E%91%EC%84%B1%  EC%9D%84-%EC%9C%84%ED%95%9C-%EB%8B%A4%EC%84%AF-%EA%B0%80%EC%A7%80-%E  D%8C%81-6c6f9832c1d9" target="_blank">`V8`</a>에서)
 
-```
-// bad
-function f1(a) {
-  a = 1;
-  // ...
-}
+  ```
+  // bad
+  function f1(a) {
+    a = 1;
+    // ...
+  }
 
-function f2(a) {
-  if (!a) { a = 1; }
-  // ...
-}
+  function f2(a) {
+    if (!a) { a = 1; }
+    // ...
+  }
 
-// good
-function f3(a) {
-  const b = a || 1;
-  // ...
-}
+  // good
+  function f3(a) {
+    const b = a || 1;
+    // ...
+  }
 
-function f4(a = 1) {
-  // ...
-}
-```
+  function f4(a = 1) {
+    // ...
+  }
+  ```
 
-- 7.14
+- 7.14 가변인자 함수를 호출하려면 스프레드 구문인 `...`을 사용하는 것이 좋다.
 
-- 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 합니다.
+  > 더 깔끔하고 컨텍스트를 제공할 필요가 없다.
 
-```
-// bad
-function foo(bar,
-             baz,
-             quux) {
-  // ...
-}
+  ```
+  // bad
+  const x = [1, 2, 3, 4, 5];
+  console.log.apply(console, x);
 
-// good
-function foo(
-  bar,
-  baz,
-  quux,
-) {
-  // ...
-}
+  // good
+  const x = [1, 2, 3, 4, 5];
+  console.log(...x);
 
-// bad
-console.log(foo,
-  bar,
-  baz);
+  // bad
+  new (Function.prototype.bind.apply(Date, [null, 2016, 8, 5]));
 
-// good
-console.log(
-  foo,
-  bar,
-  baz,
-);
-```
+  // good
+  new Date(...[2016, 8, 5]);
+  ```
+
+- 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 합니다. eslint: <a href="https://eslint.org/docs/rules/function-paren-newline" target="_blank">`function-paren-newline`</a>
+
+  ```
+  // bad
+  function foo(bar,
+               baz,
+               quux) {
+    // ...
+  }
+
+  // good
+  function foo(
+    bar,
+    baz,
+    quux,
+  ) {
+    // ...
+  }
+
+  // bad
+  console.log(foo,
+    bar,
+    baz);
+
+  // good
+  console.log(
+    foo,
+    bar,
+    baz,
+  );
+  ```
 
 ☝ [목록으로 돌아가기](#목록)
 
 ---
 
-## Arrow Fucntions
+## Arrow Functions
+
+- 8.1 인라인콜백을 전달할 때와 같이 익명 함수를 사용해야 하는 경우, 화살표 함수 표기법을 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-arrow-callback.html" target="_blank">`prefer-arrow-callback`</a>, <a href="https://eslint.org/docs/rules/arrow-spacing.html" target="_blank">`arrow-spacing`</a>
+
+  > 해당 컨텍스트에서 실행되는 함수를 만들고 보다 간결한 구문이다.
+
+  > 만약, 상당히 복잡한 함수를 가지고 있다면 로직을 분리해서 명명함수로 뽑아낼 수 있다.
+
+  ```
+  // bad
+  [1, 2, 3].map(function (x) {
+    const y = x + 1;
+    return x * y;
+  });
+
+  // good
+  [1, 2, 3].map((x) => {
+    const y = x + 1;
+    return x * y;
+  });
+  ```
+
+- 8.2 함수 본문이 side effects 없이 식(expression)을 반환하는 단일 문으로 구성된 경우, 중괄호를 생략하고 암시적 반환을 사용한다. 다른 방법으로는 중괄호를 사용하고 문(statement)을 반환하자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>, <a href="https://eslint.org/docs/rules/arrow-body-style.html" target="_blank">`arrow-body-style`</a>
+
+  > [`Syntactic sugar.`](#syntactic-sugar) 여러 함수가 함께 체인될 때, 더 잘 읽힌다.
+
+  ```
+  // bad
+  [1, 2, 3].map((number) => {
+    const nextNumber = number + 1;
+    `A string containing the ${nextNumber}.`;
+  });
+
+  // good
+  [1, 2, 3].map((number) => `A string containing the ${number + 1}.`);
+
+  // good
+  [1, 2, 3].map((number) => {
+    const nextNumber = number + 1;
+    return `A string containing the ${nextNumber}.`;
+  });
+
+  // good
+  [1, 2, 3].map((number, index) => ({
+    [index]: number,
+  }));
+
+  // No implicit return with side effects
+  function foo(callback) {
+    const val = callback();
+    if (val === true) {
+      // Do something if callback returns true
+    }
+  }
+
+  let bool = false;
+
+  // bad
+  foo(() => bool = true);
+
+  // good
+  foo(() => {
+    bool = true;
+  });
+  ```
+
+- 8.3 식이 여러줄에 걸쳐 있는 경우, 읽기 쉽도록 괄호로 묶자.
+
+> 괄호로 묶는 것은 함수의 시작과 끝을 명확하게 보여준다.
+
+```
+// bad
+['get', 'post', 'put'].map((httpMethod) => Object.prototype.  hasOwnProperty.call(
+    httpMagicObjectWithAVeryLongName,
+    httpMethod,
+  )
+);
+
+// good
+['get', 'post', 'put'].map((httpMethod) => (
+  Object.prototype.hasOwnProperty.call(
+    httpMagicObjectWithAVeryLongName,
+    httpMethod,
+  )
+));
+```
+
+8.4 명확하고 일관성 있기위해 항상 `arguments` 주위에 괄호를 넣자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>
+
+> arguments를 추가하거나 제거할 때, 변경을 최소화한다.
+
+```
+// bad
+[1, 2, 3].map(x => x * x);
+
+// good
+[1, 2, 3].map((x) => x * x);
+
+// bad
+[1, 2, 3].map(number => (
+  `A long string with the ${number}. It’s so long that we don’t want   it to take up space on the .map line!`
+));
+
+// good
+[1, 2, 3].map((number) => (
+  `A long string with the ${number}. It’s so long that we don’t want   it to take up space on the .map line!`
+));
+
+// bad
+[1, 2, 3].map(x => {
+  const y = x + 1;
+  return x * y;
+});
+
+// good
+[1, 2, 3].map((x) => {
+  const y = x + 1;
+  return x * y;
+});
+```
