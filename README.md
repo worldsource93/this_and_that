@@ -90,6 +90,9 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   function b() {} // function declaration statement
   ```
 
+  <br />
+  <br />
+
   > ## Expression
   >
   > - 표현식
@@ -112,13 +115,43 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   1.  - b가 표현식의 전부지만 이것만으로도 완전한 문이다.
       - 일반적으로 이런 문은 표현식 문(Expression Statement)라고 부른다.
 
-  > ## Syntactic sugar
-  >
-  > - 문법에 설탕을 뿌려 더 달콤하게 사용한다는 의미이다. 문법적으로 더 읽기 쉽고 이해하기 편하도록 표현되어지는 것을 말하는 것으로 적절하게 사용되면 가독성을 높이기 매우 좋다.
-  > - 대표적인 예
-  >   - Javascript의 ES6부터 추가된 Class의 표현법
-  >   - 람다식의 간결한 표현
-  > - Syntactic sugar의 장점은 ES6부터 추가된 Class의 경우에서 쉽게 찾아볼 수 있다. ES6의 Class가 기존 javascript의 함수체계와 다른 새로운 객체지향모델을 제공하는것이 아니라 기존 함수패턴의 Syntactic sugar로써 클래스 기반 언어에 익숙한 프로그래머들도 보다 빨리 학습하고 알아보기 쉽게하며 더욱 직관적인 표현이 가능해진다.
+<br />
+<br />
+
+- ### Error Call Stack
+  - FIXME: 내용 정리 필요
+
+<br />
+<br />
+
+- ### Call Site
+  - FIXME: 내용 정리 필요
+
+<br />
+<br />
+
+- ### Syntactic sugar
+
+  - 문법에 설탕을 뿌려 더 달콤하게 사용한다는 의미이다. 문법적으로 더 읽기 쉽고 이해하기 편하도록 표현되어지는 것을 말하는 것으로 적절하게 사용되면 가독성을 높이기 매우 좋다.
+  - 대표적인 예
+    - Javascript의 ES6부터 추가된 Class의 표현법
+    - 람다식의 간결한 표현
+    - Syntactic sugar의 장점은 ES6부터 추가된 Class의 경우에서 쉽게 찾아볼 수 있다. ES6의 Class가 기존 javascript의 함수체계와 다른 새로운 객체지향모델을 제공하는것이 아니라 기존 함수패턴의 Syntactic sugar로써 클래스 기반 언어에 익숙한 프로그래머들도 보다 빨리 학습하고 알아보기 쉽게하며 더욱 직관적인 표현이 가능해진다.
+
+<br />
+<br />
+
+- ### Error Call Stack
+  - FIXME: 내용 정리 필요
+
+<br />
+<br />
+
+- ### Call Site
+  - FIXME: 내용 정리 필요
+
+<br />
+<br />
 
 ☝ [목록으로 돌아가기](#목록)
 
@@ -152,6 +185,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
     console.log(foo, bar); // => 1, 9
     ```
+
+  <br />
 
 - <strong>1.2 참조 자료형(Reference data type)</strong>
 
@@ -194,6 +229,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const b = 2;
   ```
 
+  <br />
+
 - 2.2 참조를 재할당해야하는 경우 `var` 대신 `let`을 사용하자. eslint: <a href="https://eslint.org/docs/rules/no-var.html" target="_blank">`no-var`</a>
 
   > `var`처럼 function-scoped가 아닌 block-scoped로 사용하자.
@@ -211,6 +248,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     count += 1;
   }
   ```
+
+  <br />
 
 - 2.3 `let`과 `const`는 block-scoped인 반면, `var`은 function-scoped이다.
 
@@ -244,6 +283,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const item = {};
   ```
 
+  <br />
+
 - 3.2 dynamic property를 사용한 Object 생성 시, computed property name을 사용하자.
 
   > 왜 computed property name을 사용해야하는가? 한 장소에서 객체를 정의할 수 있기 때문이다. <br />
@@ -269,6 +310,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   };
   ```
 
+  <br />
+
 - 3.3 객체 메서드 표현을 짧게하자. eslint: <a href="https://eslint.org/docs/rules/object-shorthand.html" target="_blank">`object-shorthand`</a>
 
   ```
@@ -291,6 +334,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   };
   ```
 
+  <br />
+
 - 3.4 property value 사용 시 짧게 쓸 수 있다면 짧게 쓰자. eslint: <a href="https://eslint.org/docs/rules/object-shorthand.html" target="_blank">`object-shorthand`</a>
 
   > 간단명료하며 묘사적이다.
@@ -308,6 +353,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     lukeSkywalker,
   };
   ```
+
+  <br />
 
 - 3.5 선언 시, shorthand properties는 그룹화 및 최상단에 위치시키자.
 
@@ -338,6 +385,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   };
   ```
 
+  <br />
+
 - 3.6 사용할 수 없는 식별자만 quote를 사용하자. eslint: <a href="https://eslint.org/docs/rules/quote-props.html" target="_blank">`quote-props`</a>
 
   > 더 쉽게 JS 엔진에 의해 최적화되며 syntax highlighting을 개선하고, 일반적으로 읽기 쉽다.
@@ -357,6 +406,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     'data-blah': 5,
   };
   ```
+
+  <br />
 
 - 3.7 `hasOwnProperty`, `propertyIsEnumerable`, `isPrototypeOf`와 같은 `Object.prototype` 메서드를 직접 호출하지말자. eslint: <a href="https://eslint.org/docs/rules/no-prototype-builtins" target="_blank">`no-prototype-builtins`</a>
 
@@ -378,6 +429,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   import has from 'has'; // https://www.npmjs.com/package/has
   console.log(has(object, key));
   ```
+
+  <br />
 
 - 3.8 얕은 객체 복사 시 `Object.assign`보다 객체 스프레드 구문이 좋다. object rest operator를 사용해 특정 속성을 생략한 새 객체를 가져올 수 있다. eslint: <a href="https://eslint.org/docs/rules/prefer-object-spread" target="_blank">`prefer-object-spread`</a>
 
@@ -416,6 +469,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const items = [];
   ```
 
+  <br />
+
 - 4.2 배열에 항목을 추가할 때 직접 할당 대신 Array.push를 사용하자.
 
   ```
@@ -427,6 +482,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // good
   someStack.push('abracadabra');
   ```
+
+  <br />
 
 - 4.3 배열 복사 시, 배열 스프레드를 사용하자.
 
@@ -444,6 +501,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const itemsCopy = [...items];
   ```
 
+  <br />
+
 - 4.4 반복 가능한 객체를 배열로 변환하려면 `Array.from` 대신 `...`을 사용하자.
 
   ```
@@ -456,6 +515,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const nodes = [...foo];
   ```
 
+  <br />
+
 - 4.5 배열과 유사한 객체를 배열로 변환하려면 `Array.from`을 사용하자.
 
   ```
@@ -467,6 +528,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // good
   const arr = Array.from(arrLike);
   ```
+
+  <br />
 
 - 4.6 반복가능한 매핑의 경우 스프레드 대신 `Array.from`을 사용하자.
 
@@ -497,6 +560,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   };
   console.timeEnd('Function #2'); // Function #2: 33.622802734375ms
   ```
+
+  <br />
 
 - 4.7 배열 메서드 콜백에서 `return`을 사용하자. 함수 본문이 부작용 없이 식을 반환하는 단일문장으로 구성되어 있다면 반환을 생략해도 된다. eslint: <a href="https://eslint.org/docs/rules/array-callback-return" target="_blank">`array-callback-return`</a>
 
@@ -551,6 +616,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     bool = true;
   });
   ```
+
+  <br />
 
 - 4.8 배열이 여러 줄로 이루어져 있다면, 열린 직후와 닫기 직전에 줄바꿈을 한다.
 
@@ -621,6 +688,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 5.2 배열 구조 분해를 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-destructuring" target="_blank">`prefer-destructuring`</a>
 
   ```
@@ -633,6 +702,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // good
   const [first, second] = arr;
   ```
+
+  <br />
 
 - 5.3 복수의 값 반환(return multiple values)을 위해서는 배열 구조 분해가 아닌 객체 구조 분해를 사용하자.
 
@@ -678,6 +749,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const name = 'Capt. Janeway';
   ```
 
+  <br />
+
 - 6.2 100자 이상의 문자열을 여러 줄에 걸쳐서 연결하면 안된다.
 
   > 끊어진 문자열은 성가시고 코드 검색성이 떨어진다.
@@ -697,6 +770,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // good
   const errorMessage = 'This is a super long error that was thrown   because of Batman. When you stop to think about how Batman had   anything to do with this, you would get nowhere fast.';
   ```
+
+  <br />
 
 - 6.3 문자열을 프로그래밍 방식으로 구성할 때, 연결 대신 템플릿 문자열을 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-template.html" target="_blank">`prefer-template`</a>, <a href="https://eslint.org/docs/rules/template-curly-spacing" target="_blank">`template-curly-spacing`</a>
 
@@ -724,7 +799,11 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 6.4 문자열에 `eval()`을 사용하면 안된다. 많은 취약성을 야기시킨다. eslint: <a href="https://eslint.org/docs/rules/no-eval" target="_blank">`no-eval`</a>
+
+  <br />
 
 - 6.5 문자열의 문자를 불필요하게 이탈시키지말자.
 
@@ -768,6 +847,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   };
   ```
 
+  <br />
+
 - 7.2 IIFE(immediately invoked function expressions, 즉시실행함수)를 괄호로 묶자. eslint: <a href="https://eslint.org/docs/rules/wrap-iife.html" target="_blank">`wrap-iife`</a>
 
   > IIFE는 단일 단위이므로 이를 포장하여 깔끔하게 표현하자. 거의 모든 IIFE는 모듈로 대체 가능하다.
@@ -779,11 +860,11 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }());
   ```
 
-☝ [목록으로 돌아가기](#목록)
-
----
+  <br />
 
 - 7.3 함수블록이 아닌 곳(`if`, `while`, etc...)에 함수를 선언하지마라. 대신 함수를 변수에 할당하자. 브라우저는 우리가 그렇게 할 수 있도록 해주지만 안타깝게도 브라우저 별로 다르게 해석한다. eslint: <a href="https://eslint.org/docs/rules/no-loop-func.html" target="_blank">`no-loop-func`</a>
+
+  <br />
 
 - 7.4 ECMA-262는 `block`을 문(statement)의 한 종류로 정의하고 있다. 함수 선언은 문이 아닙니다. Doodling notes: [Statement](#statement), [Expression](#expression)
 
@@ -804,6 +885,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 7.5 매개변수 이름을 `arguments`라 지정하지 말자. 이는 모든 함수 범위에 주어진 `arguments` 객체보다 우선한다.
 
   ```
@@ -817,6 +900,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     // ...
   }
   ```
+
+  <br />
 
 - 7.6 `arguments`를 사용하지말고 rest 구문인 `...`를 대신 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-rest-params" target="_blank">`prefer-rest-params`</a>
 
@@ -834,6 +919,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     return args.join('');
   }
   ```
+
+  <br />
 
 - 7.7 변형되는 함수 parameter 대신 기본 매개 변수 구문을 사용하자.
 
@@ -861,6 +948,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 7.8 기본 변수 설정의 부작용을 회피하자.
 
   > 그것은 판단에 혼란을 준다.
@@ -877,6 +966,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   count();  // 3
   ```
 
+  <br />
+
 - 7.9 항상 기본값 설정은 마지막에 하자. eslint: <a href="https://eslint.org/docs/rules/default-param-last" target="_blank">`default-param-last`</a>
 
   ```
@@ -891,6 +982,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 7.10 Function constructor를 사용하여 새로운 함수를 생성하지 마라. eslint: <a href="https://eslint.org/docs/rules/no-new-func" target="_blank">`no-new-func`</a>
 
   > 이러한 방식으로 새로운 함수를 생성하는 것은 `eval()`과 유사하게 문자열을 평가하여 취약성이 생기게된다.
@@ -902,6 +995,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // still bad
   var subtract = Function('a', 'b', 'return a - b');
   ```
+
+  <br />
 
 - 7.11 function signature는 띄어쓰자. eslint: <a href="https://eslint.org/docs/rules/space-before-function-paren" target="_blank">`space-before-function-paren`</a>, <a href="https://eslint.org/docs/rules/space-before-blocks" target="_blank">`space-before-blocks`</a>
 
@@ -918,6 +1013,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   const y = function a() {};
   ```
 
+  <br />
+
 - 7.12 매개변수를 변형시키지 마라. eslint: <a href="https://eslint.org/docs/rules/no-param-reassign.html" target="_blank">`no-param-reassign`</a>
 
   > 매개변수로 전달된 객체를 조작하는 것은 원본에 의도치 않은 side effects를 발생 시킬 수 있다.
@@ -933,6 +1030,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     const key = Object.prototype.hasOwnProperty.call(obj, 'key') ? obj.key : 1;
   }
   ```
+
+  <br />
 
 - 7.13 매개변수를 재할당하지마라. eslint: <a href="https://eslint.org/docs/rules/no-param-reassign.html" target="_blank">`no-param-reassign`</a>
 
@@ -961,6 +1060,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   }
   ```
 
+  <br />
+
 - 7.14 가변인자 함수를 호출하려면 스프레드 구문인 `...`을 사용하는 것이 좋다.
 
   > 더 깔끔하고 컨텍스트를 제공할 필요가 없다.
@@ -980,6 +1081,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   // good
   new Date(...[2016, 8, 5]);
   ```
+
+  <br />
 
 - 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 합니다. eslint: <a href="https://eslint.org/docs/rules/function-paren-newline" target="_blank">`function-paren-newline`</a>
 
@@ -1039,6 +1142,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   });
   ```
 
+  <br />
+
 - 8.2 함수 본문이 side effects 없이 식(expression)을 반환하는 단일 문으로 구성된 경우, 중괄호를 생략하고 암시적 반환을 사용한다. 다른 방법으로는 중괄호를 사용하고 문(statement)을 반환하자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>, <a href="https://eslint.org/docs/rules/arrow-body-style.html" target="_blank">`arrow-body-style`</a>
 
   > [`Syntactic sugar.`](#syntactic-sugar) 여러 함수가 함께 체인될 때, 더 잘 읽힌다.
@@ -1083,57 +1188,136 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
   });
   ```
 
+  <br />
+
 - 8.3 식이 여러줄에 걸쳐 있는 경우, 읽기 쉽도록 괄호로 묶자.
 
-> 괄호로 묶는 것은 함수의 시작과 끝을 명확하게 보여준다.
+  > 괄호로 묶는 것은 함수의 시작과 끝을 명확하게 보여준다.
 
-```
-// bad
-['get', 'post', 'put'].map((httpMethod) => Object.prototype.  hasOwnProperty.call(
-    httpMagicObjectWithAVeryLongName,
-    httpMethod,
+  ```
+  // bad
+  ['get', 'post', 'put'].map((httpMethod) => Object.prototype.  hasOwnProperty.call(
+      httpMagicObjectWithAVeryLongName,
+      httpMethod,
+    )
+  );
+
+  // good
+  ['get', 'post', 'put'].map((httpMethod) => (
+    Object.prototype.hasOwnProperty.call(
+      httpMagicObjectWithAVeryLongName,
+      httpMethod,
+    )
+  ));
+  ```
+
+  <br />
+
+- 8.4 명확하고 일관성 있기위해 항상 `arguments` 주위에 괄호를 넣자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>
+
+  > arguments를 추가하거나 제거할 때, 변경을 최소화한다.
+
+  ```
+  // bad
+  [1, 2, 3].map(x => x * x);
+
+  // good
+  [1, 2, 3].map((x) => x * x);
+
+  // bad
+  [1, 2, 3].map(number => (
+    `A long string with the ${number}. It’s so long that we don’t want   it to take   up space on the .map line!`
+  ));
+
+  // good
+  [1, 2, 3].map((number) => (
+    `A long string with the ${number}. It’s so long that we don’t want   it to take   up space on the .map line!`
+  ));
+
+  // bad
+  [1, 2, 3].map(x => {
+    const y = x + 1;
+    return x * y;
+  });
+
+  // good
+  [1, 2, 3].map((x) => {
+    const y = x + 1;
+    return x * y;
+  });
+  ```
+
+  <br />
+
+- 8.5 화살표 함수 구문의 `=>`와 비교 연산자의 `<=`, `>=`를 헷갈리지 말자. eslint: <a href="https://eslint.org/docs/rules/no-confusing-arrow" target="_blank">`no-confusing-arrow`</a>
+
+  ```
+  // bad
+  const itemHeight = (item) => item.height <= 256 ? item.largeSize : item.smallSize;
+
+  // bad
+  const itemHeight = (item) => item.height >= 256 ? item.largeSize : item.smallSize;
+
+  // good
+  const itemHeight = (item) => (item.height <= 256 ? item.largeSize : item.smallSize);
+
+  // good
+  const itemHeight = (item) => {
+    const { height, largeSize, smallSize } = item;
+    return height <= 256 ? largeSize : smallSize;
+  };
+  ```
+
+  <br />
+
+- 8.6 화살표 함수의 본문에 암시적 반환값을 위치시키자. eslint: <a href="https://eslint.org/docs/rules/implicit-arrow-linebreak" target="_blank">`implicit-arrow-linebreak`</a>
+
+  ```
+  // bad
+  (foo) =>
+    bar;
+
+  (foo) =>
+    (bar);
+
+  // good
+  (foo) => bar;
+  (foo) => (bar);
+  (foo) => (
+     bar
   )
-);
+  ```
 
-// good
-['get', 'post', 'put'].map((httpMethod) => (
-  Object.prototype.hasOwnProperty.call(
-    httpMagicObjectWithAVeryLongName,
-    httpMethod,
-  )
-));
-```
+☝ [목록으로 돌아가기](#목록)
 
-8.4 명확하고 일관성 있기위해 항상 `arguments` 주위에 괄호를 넣자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>
+---
 
-> arguments를 추가하거나 제거할 때, 변경을 최소화한다.
+## Classes & Constructor
 
-```
-// bad
-[1, 2, 3].map(x => x * x);
+- 9.1 항상 `class`를 사용해라. 직접 `prototype`을 다루는 것을 피해라.
 
-// good
-[1, 2, 3].map((x) => x * x);
+  > `class` 구문이 더 간결하고 추론하기 쉽다.
 
-// bad
-[1, 2, 3].map(number => (
-  `A long string with the ${number}. It’s so long that we don’t want   it to take up space on the .map line!`
-));
+  ```
+  // bad
+  function Queue(contents = []) {
+    this.queue = [...contents];
+  }
+  Queue.prototype.pop = function () {
+    const value = this.queue[0];
+    this.queue.splice(0, 1);
+    return value;
+  };
 
-// good
-[1, 2, 3].map((number) => (
-  `A long string with the ${number}. It’s so long that we don’t want   it to take up space on the .map line!`
-));
-
-// bad
-[1, 2, 3].map(x => {
-  const y = x + 1;
-  return x * y;
-});
-
-// good
-[1, 2, 3].map((x) => {
-  const y = x + 1;
-  return x * y;
-});
-```
+  // good
+  class Queue {
+    constructor(contents = []) {
+      this.queue = [...contents];
+    }
+    pop() {
+      const value = this.queue[0];
+      this.queue.splice(0, 1);
+      return value;
+    }
+  }
+  ```
