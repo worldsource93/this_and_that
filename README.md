@@ -141,25 +141,13 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 <br />
 <br />
 
-- ### Error Call Stack
-  - FIXME: 내용 정리 필요
-
-<br />
-<br />
-
-- ### Call Site
-  - FIXME: 내용 정리 필요
-
-<br />
-<br />
-
 ☝ [목록으로 돌아가기](#목록)
 
 ---
 
 ## Types
 
-- <strong>1.1 원시 자료형(Primitive data type)</strong>
+- 1.1 원시 자료형(Primitive data type)
 
   - call by value, 불변, immutable
   - 원본 값을 복사해서 사용하는 개념, 값을 전달받은 함수나 단락(block)에서 값을 변경해도 복사해서 가져온 값이 수정될 뿐, 원본에는 아무런 영향이 없다.
@@ -188,7 +176,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
   <br />
 
-- <strong>1.2 참조 자료형(Reference data type)</strong>
+- 1.2 참조 자료형(Reference data type)
 
   - call by reference, !불변, mutable
   - call by value와 동일하게 원본 값을 복사해서 사용하지만 원본 값이 가르키는 대상이 <strong>값</strong>인지 <strong>주소값</strong>인지에 따라 다르며 주소값을 가르키는 경우, call by value와 다르게 원본에도 변경이 일어난다.
@@ -663,7 +651,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 ## Destructuring
 
-- 5.1 객체에서 여러 속성을 사용하는 경우, 객체 접근 시 구조 분해를 사용하자. <a href="https://eslint.org/docs/rules/prefer-destructuring" target="_blank">`prefer-destructuring`</a>
+- 5.1 객체에서 여러 속성을 사용하는 경우, 객체 접근 시 구조 분해를 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-destructuring" target="_blank">`prefer-destructuring`</a>
 
   > 구조 분해를 사용하면 해당 속성에 대한 임시 참조를 만들어 객체의 반복적인 접근을 방지할 수 있다. 반복적인 객체 접근은 더 많은 중복된 코드를 생성하고 더 많은 리소스를 필요로 하며 실수 빈도를 높인다. 또한 객체 구조 분해는 블록에서 사용되는 객체 구조에 대한 single site of definition(정의된 하나의 물리적 영역)이 제공되므로 사용할 항목을 정하기 위해 블록 전체를 읽을 필요가 없게된다.
 
@@ -708,7 +696,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 - 5.3 복수의 값 반환(return multiple values)을 위해서는 배열 구조 분해가 아닌 객체 구조 분해를 사용하자.
 
   > call sites(<a href="https://en.wikipedia.org/wiki/Call_site" target="_blank">`call site`</a>: 함수가 호출되는 영역, 위치)를 중단하지 않고 때에 따라 새로운 속성을 추가하거나 순서를 변경할 수 있다. <br />
-  > FIXME: call site에 대한 개념이 명확하게 이해가 되지 않아 다시 정리할 것
+  >
+  > <p color="red">FIXME: call site에 대한 개념이 명확하게 이해가 되지 않아 다시 정리할 것</p>
 
   ```
   // bad
@@ -827,7 +816,8 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 - 7.1 함수 선언식 대신 명명된 함수 표현식을 사용하자.
 
   > 함수 선언식은 호이스팅되기 때문에 파일에서 함수를 정의하기 전에 참조할 수 있고, 이는 가독성과 유지보수성을 해친다. 함수의 정의가 파일의 나머지 부분을 이해하는데 방해 혹은 간섭이 될정도로 크거나 복잡하다면, 함수를 자체 모듈로 추출해야한다. 표현식을 담고있는 변수에서 이름이 추론되는지 여부에 상관없이 표현식에 명시적 이름을 붙이는 것을 잊지말자. 이렇게 하면 Error call stack에 대한 모든 가정을 없앨 수 있다. <br />
-  > FIXME: Error call stack에 대한 모든 가정을 없앨 수 있다는 의미는 무엇인지 좀 더 찾아서 다시 정리
+  >
+  > <p color="red">FIXME: Error call stack에 대한 모든 가정을 없앨 수 있다는 의미는 무엇인지 좀 더 찾아서 다시 정리</p>
 
   ```
   // bad
@@ -905,7 +895,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 - 7.6 `arguments`를 사용하지말고 rest 구문인 `...`를 대신 사용하자. eslint: <a href="https://eslint.org/docs/rules/prefer-rest-params" target="_blank">`prefer-rest-params`</a>
 
-  > `...`는 개발자가 원하는 것을 명백하게 표현할 수 있다. 또한, 나머지 parameter는 유사 배열이 아닌 실제 배열이다.
+  > `...`는 원하는 것을 명백하게 표현할 수 있다. 또한, 나머지 parameter는 유사 배열이 아닌 실제 배열이다.
 
   ```
   // bad
@@ -950,9 +940,9 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
   <br />
 
-- 7.8 기본 변수 설정의 부작용을 회피하자.
+- 7.8 기본 변수 설정의 side effects를 회피하자.
 
-  > 그것은 판단에 혼란을 준다.
+  > side effects는 판단에 혼란을 준다.
 
   ```
   var b = 1;
@@ -1084,7 +1074,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
   <br />
 
-- 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 합니다. eslint: <a href="https://eslint.org/docs/rules/function-paren-newline" target="_blank">`function-paren-newline`</a>
+- 7.15 여러줄의 signatures 또는 invocation이 있는 함수의 경우, 모든 멀티라인 목록과 동일하게 들여써야 한다. eslint: <a href="https://eslint.org/docs/rules/function-paren-newline" target="_blank">`function-paren-newline`</a>
 
   ```
   // bad
@@ -1146,7 +1136,7 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 - 8.2 함수 본문이 side effects 없이 식(expression)을 반환하는 단일 문으로 구성된 경우, 중괄호를 생략하고 암시적 반환을 사용한다. 다른 방법으로는 중괄호를 사용하고 문(statement)을 반환하자. eslint: <a href="https://eslint.org/docs/rules/arrow-parens.html" target="_blank">`arrow-parens`</a>, <a href="https://eslint.org/docs/rules/arrow-body-style.html" target="_blank">`arrow-body-style`</a>
 
-  > [`Syntactic sugar.`](#syntactic-sugar) 여러 함수가 함께 체인될 때, 더 잘 읽힌다.
+  > [`Syntactic sugar`](#syntactic-sugar). 여러 함수가 함께 체인될 때, 더 잘 읽힌다.
 
   ```
   // bad
