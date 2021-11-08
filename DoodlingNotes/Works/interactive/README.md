@@ -140,6 +140,10 @@
 
 먼저 Sequence를 사용해야하기 때문에 각 테이블 별 필요 Sequence를 생성한다.
 
+<details>
+<summary>테이블 생성 펼치기 / 접기</summary>
+<div markdown="1">
+
 ```
 CREATE SEQUENCE public.[테이블명]
     INCREMENT 1
@@ -247,6 +251,9 @@ ALTER TABLE public.[익명 댓글 대댓글 테이블명]
 
 > Note: sequence, NOT NULL, PK, FK, UK, CASCADE 설정 <br />
 > COLLATE의 경우 대소문자 구분, 문자열 정렬, like 문 사용 시 인덱스 사용여부 결정 등에 영향을 미친다. TABLESPACE의 경우 필요 시 커스텀해서 사용한다.
+
+</div>
+</details>
 
 <br />
 <br />
