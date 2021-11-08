@@ -253,9 +253,9 @@ ALTER TABLE public.[익명 댓글 대댓글 테이블명]
 
 ### 쿼리 만들기
 
-> 이제 쿼리를 실제 사용하게 될 쿼리문을 만들어보자.
+> 실제 사용하게 될 쿼리문의 기본틀을 만들어보자.
 
-모든 API 기능에 대해서 CRUD를 작성해야된다고 요구사항 조건이 있었다. <br />
+<strong>모든 API 기능에 대해서 CRUD를 작성</strong> 요구사항 조건이 있었다. <br />
 먼저, 만들어야하는 API 기능을 리스트업 해보자.
 
 - API List
@@ -269,7 +269,7 @@ ALTER TABLE public.[익명 댓글 대댓글 테이블명]
 
 <br />
 
-리스트 업된 목록의 기본틀을 작성해보자.
+리스트 업된 목록의 기본틀을 작성해보자. 패스워드의 경우, 클라이언트에서 암호화해서 전달할 예정이고 지금은 사람이 알아볼 수 있는 문자열로 입력한다.
 
 ```
 // 관리자 계정 Create
@@ -291,6 +291,12 @@ WHERE username = 'test';
 // 관리자 계정 Delete
 DELETE FROM [관리자 테이블명]
 WHERE username = 'test';
+
+// 관리자 계정 로그인
+SELECT *
+FROM [관리자 테이블명]
+WHERE username = 'test'
+AND passwd = 'test'
 ```
 
 ```
@@ -318,28 +324,54 @@ WHERE conn_addr = '0.0.0.0';
 ```
 // 게시판 게시글 Create
 INSERT INTO [게시판 테이블명] (
-
+  writer, title, contents, passwd, type_code
 ) VALUES (
-
+  'anonymous1', '게시글 테스트1', 'Lorem ipsum1', '1234', 'foc'
 );
 
 // 게시판 게시글 Read
 SELECT * from [게시판 테이블명]
-WHERE [조건 컬럼명] = [조건 값];
+WHERE [컬럼명] = [조건 값];
 
 // 게시판 게시글 Update
 UPDATE [게시판 테이블명]
 SET [업데이트 컬럼명] = [업데이트 값]
-WHERE [조건 컬럼명] = [조건 값];
+WHERE idx = 1;
 
 // 게시판 게시글 Delete
 DELETE FROM [게시판 테이블명]
-WHERE [조건 컬럼명] = [조건 값];
+WHERE idx = 1';
 ```
+
+```
+// 게시판 댓글 대댓글 Create
+INSERT INTO [댓글 대댓글 테이블명] (
+  writer, contents, passwd, post_num, step, reply_num, group_num
+) VALUES (
+  'anonymous1', '댓글 대댓글 테스트1', '1234', 1, 0, 1, 1
+);
+
+// 게시판 댓글 대댓글 Read
+SELECT * from [댓글 대댓글 테이블명]
+WHERE [컬럼명] = [조건 값];
+
+// 게시판 댓글 대댓글 Update
+UPDATE [ 테이블명]
+SET [업데이트 컬럼명] = [업데이트 값]
+WHERE idx = 1;
+
+// 게시판 댓글 대댓글 Delete
+DELETE FROM [댓글 대댓글 테이블명]
+WHERE idx = 1;
+```
+
+> Notes: 복잡한 쿼리의 경우, 서브쿼리나 조인 등을 사용하게 된다.
 
 <br />
 
 ### 맵퍼
+
+> 맵퍼를 작성해보자.
 
 <br />
 
