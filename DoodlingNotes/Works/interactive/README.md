@@ -1,6 +1,6 @@
 # 회사에서 프로젝트 처음으로 혼자서 처음부터 끝까지(feat.interactive)
 
-회사에서 특정 프로젝트의 일부를 구현하는데 있어, DB 설계부터 Front-end까지 다 해볼 수 있는 기회를 주셨다. 고난과 역경이 있을 것으로 판단하고 많이 성장할 수 있을 것이라 판단되어 기록해보고자 한다.
+회사에서 특정 프로젝트의 일부를 구현하는데 있어, DB 설계부터 Front-end까지 다 해볼 수 있는 기회를 주셨다. 많이 성장할 수 있을 것이라 판단되어 기록해보고자 한다.
 
 <br />
 
@@ -80,31 +80,32 @@
 ### 데이터베이스 설계 시 필요한 정보
 
 - 로그인 관련 데이터베이스에서 필요한 정보
-  - idx: 관리자 계정 인덱스
-  - id: 관리자 아이디
-  - password: 관리자 패스워드
+  - idx: 관리자 계정 인덱스 // integer, sequence auto increment
+  - id: 관리자 아이디 // character varying
+  - passwd: 관리자 패스워드 // character varying
+  - connected_ip: 접속 IP // character varying
 
 <br />
 
 - 익명 게시판 관련 데이터베이스에서 필요한 정보
-  - idx: 게시글 인덱스
-  - author: 익명의 작성자(무작위 문자열)
-  - title: 게시글 제목
-  - content: 게시글 내용
-  - created_date: 작성된 날짜시간(timestamp)
-  - updated_date: 업데이트된 날짜시간(timestamp)
-  - password: 글의 수정, 삭제 시 필요
+  - idx: 게시글 인덱스 // integer, sequence auto increment
+  - writer: 익명의 작성자 // character varying
+  - title: 게시글 제목 // character varying
+  - content: 게시글 내용 // text
+  - created_date: 작성된 날짜시간 // timestamp with timezone
+  - updated_date: 업데이트된 날짜시간 // timestamp with timezone
+  - passwd: 글의 수정, 삭제 시 필요 // character varying
 
 <br />
 
 - 익명 댓글 대댓글 관련 데이터베이스에서 필요한 정보
-  - idx: 댓글 인덱스
-  - author: 익명의 작성자(무작위 문자열)
-  - content: 댓글 내용
-  - postNum: 게시글 sequence
-  - level: 댓글과 대댓글을 구분
-  - order: 댓글과 대댓글 순서 구분
-  - groupNum: 댓글 그룹구분에 사용되며 댓글 인덱스를 부여, 대댓글의 경우 자신 대신 부모의 인덱스를 저장 => 특정 댓글에 종속되어있는 것을 표시
-  - created_date: 작성된 날짜시간(timestamp)
-  - updated_date: 업데이트된 날짜시간(timestamp)
-  - password: 글의 수정, 삭제 시 필요
+  - idx: 댓글 인덱스 // integer, sequence auto increment
+  - writer: 익명의 작성자(무작위 문자열) // character varying
+  - content: 댓글 내용 // text
+  - post_num: 게시글 idx // integer
+  - level: 댓글과 대댓글을 구분 // integer
+  - order: 댓글과 대댓글 순서 구분 // integer
+  - group_num: 댓글 그룹구분에 사용되며 댓글 인덱스를 부여, 대댓글의 경우 자신 대신 부모의 인덱스를 저장 => 특정 댓글에 종속되어있는 것을 표시 // integer
+  - created_date: 작성된 날짜시간 // timestamp with timezone
+  - updated_date: 업데이트된 날짜시간 // timestamp with timezone
+  - passwd: 글의 수정, 삭제 시 필요 // character varying
