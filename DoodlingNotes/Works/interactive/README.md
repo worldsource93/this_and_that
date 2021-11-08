@@ -1,6 +1,6 @@
 # 회사에서 프로젝트 처음으로 혼자서 처음부터 끝까지(feat.interactive)
 
-회사에서 특정 프로젝트의 일부를 구현하는데 있어, DB 설계부터 Front-end까지 다 해볼 수 있는 기회를 주셨다. 많이 성장할 수 있을 것이라 판단되어 기록해보고자 한다.
+회사에서 특정 프로젝트의 일부를 구현하는데 있어, DB 설계부터 Front-end까지 해볼 수 있는 기회를 주셨다. 입사 이후부터 React만 사용하던 내가 back-end와 jsp까지 해볼 수 있는 기회라 많이 성장할 수 있을 것이라 판단되어 기록해보고자 한다.
 
 <br />
 
@@ -11,6 +11,7 @@
 ### <strong>ToDo</strong>
 
 - 관리자 로그인, 로그아웃, 패스워드 변경 기능
+- 관리자 계정 로그관리
 - 게시판(댓글, 대댓글)
 - 위 기능에 필요한 데이터베이스 구축, Back-end 개발, Front-end 개발
 
@@ -24,6 +25,13 @@
 - Sequence 필수
 - 게시판 데이터베이스와 댓글 & 대댓글 데이터베이스의 분리
 - 게시판 및 댓글 대댓글 작성시간은 timestamp로 관리
+- API 생성 시, 모든 기능에 대한 CRUD
+- 컨트롤러 단에서 return json 형태
+
+### <strong>Use</strong>
+
+- Java 1.8 & Jsp
+- PostgreSQL
 
 <br />
 
@@ -77,35 +85,266 @@
 
 ---
 
-### 데이터베이스 설계 시 필요한 정보
+### 데이터베이스 설계, 테이블에서 필요한 정보
 
-- 로그인 관련 데이터베이스에서 필요한 정보
+> 테이블 컬럼을 정해보자.
+
+- 로그인 테이블
   - idx: 관리자 계정 인덱스 // integer, sequence auto increment
-  - id: 관리자 아이디 // character varying
+  - username: 관리자 아이디 // character varying
   - passwd: 관리자 패스워드 // character varying
-  - connected_ip: 접속 IP // character varying
+  - created_date: 작성된 날짜시간 // timestamp with timezone
 
 <br />
 
-- 익명 게시판 관련 데이터베이스에서 필요한 정보
+- 로그관리 테이블
+  - idx: 로그 인덱스
+  - conn_id: 관리자 계정 인덱스
+  - conn_addr: 접속 IP
+  - created_date: 작성된 날짜시간
+
+<br />
+
+- 익명 게시판 테이블
   - idx: 게시글 인덱스 // integer, sequence auto increment
   - writer: 익명의 작성자 // character varying
   - title: 게시글 제목 // character varying
-  - content: 게시글 내용 // text
+  - contents: 게시글 내용 // text
+  - passwd: 글의 수정, 삭제 시 필요 // character varying
   - created_date: 작성된 날짜시간 // timestamp with timezone
   - updated_date: 업데이트된 날짜시간 // timestamp with timezone
-  - passwd: 글의 수정, 삭제 시 필요 // character varying
+  - type_code: 타입코드 // character varying
 
 <br />
 
-- 익명 댓글 대댓글 관련 데이터베이스에서 필요한 정보
+- 익명 댓글 대댓글 테이블
   - idx: 댓글 인덱스 // integer, sequence auto increment
   - writer: 익명의 작성자(무작위 문자열) // character varying
-  - content: 댓글 내용 // text
-  - post_num: 게시글 idx // integer
-  - level: 댓글과 대댓글을 구분 // integer
-  - order: 댓글과 대댓글 순서 구분 // integer
-  - group_num: 댓글 그룹구분에 사용되며 댓글 인덱스를 부여, 대댓글의 경우 자신 대신 부모의 인덱스를 저장 => 특정 댓글에 종속되어있는 것을 표시 // integer
+  - contents: 댓글 내용 // text
+  - passwd: 글의 수정, 삭제 시 필요 // character varying
+  - post_num: 게시글 idx // integer, foreign key 설정
   - created_date: 작성된 날짜시간 // timestamp with timezone
   - updated_date: 업데이트된 날짜시간 // timestamp with timezone
-  - passwd: 글의 수정, 삭제 시 필요 // character varying
+  - step: 댓글과 대댓글을 구분 // integer
+  - reply_num: 댓글과 대댓글 순서 구분 // integer
+  - group_num: 댓글 그룹구분에 사용되며 댓글 인덱스를 부여, 대댓글의 경우 자신 대신 부모의 인덱스를 저장 => 특정 댓글에 종속되어있는 것을 표시 // integer
+
+<br />
+<br />
+
+### 테이블 생성
+
+> 컬럼정보를 사용한 테이블 생성, 이 글에서는 PostgreSQL을 사용한다.
+
+관리자, 관리자 로그, 익명 게시판, 익명 댓글 대댓글에 대한 테이블을 생성해보자.
+
+먼저 Sequence를 사용해야하기 때문에 각 테이블 별 필요 Sequence를 생성한다.
+
+```
+CREATE SEQUENCE public.[테이블명]
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.[테이블명]
+    OWNER TO [DB 유저명];
+```
+
+> Note: 테이블에서 사용할 sequence를 생성하고 sequence의 오너를 사용중인 DB 유저명으로 변경하였다.
+
+<br />
+
+다음은 테이블 생성
+
+```
+CREATE TABLE public.[관리자 테이블명]
+(
+    idx integer NOT NULL DEFAULT nextval('adm_user_idx_seq'::regclass),
+    username character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    passwd character varying(512) COLLATE pg_catalog."default" NOT NULL,
+    created_date timestamp with time zone DEFAULT now(),
+    CONSTRAINT adm_user_pk PRIMARY KEY (idx),
+    CONSTRAINT adm_user_username_key UNIQUE (username)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.[관리자 테이블명]
+    OWNER to [DB 유저명];
+```
+
+```
+CREATE TABLE public.[관리자 로그 테이블명]
+(
+    idx integer NOT NULL DEFAULT nextval('adm_user_log_idx_seq'::regclass),
+    conn_id integer,
+    conn_addr character varying(128) COLLATE pg_catalog."default",
+    created_date timestamp with time zone DEFAULT now(),
+    CONSTRAINT adm_user_log_connect_pk PRIMARY KEY (idx)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.[관리자 로그 테이블명]
+    OWNER to [DB 유저명];
+```
+
+```
+CREATE TABLE public.[익명 게시판 테이블명]
+(
+    idx integer NOT NULL DEFAULT nextval('anonymous_board_idx_seq'::regclass),
+    writer character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    contents text COLLATE pg_catalog."default" NOT NULL,
+    passwd character varying(512) COLLATE pg_catalog."default" NOT NULL,
+    created_date timestamp with time zone DEFAULT now(),
+    updated_date timestamp with time zone DEFAULT now(),
+    type_code character varying(3) COLLATE pg_catalog."default",
+    CONSTRAINT [PK명] PRIMARY KEY (idx)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.[익명 게시판 테이블명]
+    OWNER to [DB 유저명];
+```
+
+```
+CREATE TABLE public.[익명 댓글 대댓글 테이블명]
+(
+    idx integer NOT NULL DEFAULT nextval('anonymous_reply_idx_seq'::regclass),
+    writer character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    contents text COLLATE pg_catalog."default" NOT NULL,
+    passwd character varying(512) COLLATE pg_catalog."default" NOT NULL,
+    post_num integer NOT NULL,
+    created_date timestamp with time zone DEFAULT now(),
+    updated_date timestamp with time zone DEFAULT now(),
+    step integer NOT NULL,
+    reply_num integer NOT NULL,
+    group_num integer NOT NULL,
+    CONSTRAINT [PK명] PRIMARY KEY (idx),
+    CONSTRAINT [FK명] FOREIGN KEY (post_num)
+        REFERENCES public.[익명 테이블 테이블명] (idx) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.[익명 댓글 대댓글 테이블명]
+    OWNER to [DB 유저명];
+```
+
+> Note: sequence, NOT NULL, PK, FK, UK, CASCADE 설정 <br />
+> COLLATE의 경우 대소문자 구분, 문자열 정렬, like 문 사용 시 인덱스 사용여부 결정 등에 영향을 미친다. TABLESPACE의 경우 필요 시 커스텀해서 사용한다.
+
+<br />
+<br />
+
+### 쿼리 만들기
+
+> 이제 쿼리를 실제 사용하게 될 쿼리문을 만들어보자.
+
+모든 API 기능에 대해서 CRUD를 작성해야된다고 요구사항 조건이 있었다. <br />
+먼저, 만들어야하는 API 기능을 리스트업 해보자.
+
+- API List
+  - 관리자 계정
+    - 관리자 계정 CRUD
+    - 관리자 계정 로그 CRUD
+    - 로그인
+    - 로그아웃
+  - 게시판 CRUD
+  - 댓글 대댓글 CRUD
+
+<br />
+
+리스트 업된 목록의 기본틀을 작성해보자.
+
+```
+// 관리자 계정 Create
+INSERT INTO [관리자 테이블명] (
+  username, passwd
+) VALUES (
+  'test', 'test'
+);
+
+// 관리자 계정 Read
+SELECT * from [관리자 테이블명]
+WHERE username = 'test';
+
+// 관리자 계정 Update
+UPDATE [관리자 테이블명]
+SET passwd = 'test11';
+WHERE username = 'test';
+
+// 관리자 계정 Delete
+DELETE FROM [관리자 테이블명]
+WHERE username = 'test';
+```
+
+```
+// 관리자 계정 로그 Create
+INSERT INTO [관리자 로그 테이블명] (
+  conn_id, conn_addr
+) VALUES (
+  1, 'xxx.xx.xx.xx'
+);
+
+// 관리자 계정 로그 Read
+SELECT * from [관리자 로그 테이블명]
+WHERE conn_id = 1;
+
+// 관리자 계정 로그 Update
+UPDATE [관리자 로그 테이블명]
+SET conn_addr = '127.0.0.1';
+WHERE conn_addr = '0.0.0.0';
+
+// 관리자 계정 로그 Delete
+DELETE FROM [관리자 로그 테이블명]
+WHERE conn_addr = '0.0.0.0';
+```
+
+```
+// 게시판 게시글 Create
+INSERT INTO [게시판 테이블명] (
+
+) VALUES (
+
+);
+
+// 게시판 게시글 Read
+SELECT * from [게시판 테이블명]
+WHERE [조건 컬럼명] = [조건 값];
+
+// 게시판 게시글 Update
+UPDATE [게시판 테이블명]
+SET [업데이트 컬럼명] = [업데이트 값]
+WHERE [조건 컬럼명] = [조건 값];
+
+// 게시판 게시글 Delete
+DELETE FROM [게시판 테이블명]
+WHERE [조건 컬럼명] = [조건 값];
+```
+
+<br />
+
+### 맵퍼
+
+<br />
+
+### 서비스
+
+<br />
+
+### 컨트롤러
