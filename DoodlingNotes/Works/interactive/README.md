@@ -132,9 +132,9 @@
 <br />
 <br />
 
-### 테이블 생성
+### Table
 
-> 컬럼정보를 사용한 테이블 생성, 이 글에서는 PostgreSQL을 사용한다.
+> 테이블 생성
 
 관리자, 관리자 로그, 익명 게시판, 익명 댓글 대댓글에 대한 테이블을 생성해보자.
 
@@ -271,6 +271,10 @@ ALTER TABLE public.[익명 댓글 대댓글 테이블명]
 
 리스트 업된 목록의 기본틀을 작성해보자. 패스워드의 경우, 클라이언트에서 암호화해서 전달할 예정이고 지금은 사람이 알아볼 수 있는 문자열로 입력한다.
 
+<details>
+<summary>쿼리 펼치기 / 접기</summary>
+<div markdown="1">
+
 ```
 // 관리자 계정 Create
 INSERT INTO [관리자 테이블명] (
@@ -367,16 +371,73 @@ WHERE idx = 1;
 
 > Notes: 복잡한 쿼리의 경우, 서브쿼리나 조인 등을 사용하게 된다.
 
-<br />
-
-### 맵퍼
-
-> 맵퍼를 작성해보자.
+</div>
+</details>
 
 <br />
 
-### 서비스
+### Model
+
+> 모델 작성
+
+<details>
+<summary>모델 펼치기 / 접기</summary>
+<div markdown="1">
+
+```
+
+```
+
+</div>
+</details>
 
 <br />
 
-### 컨트롤러
+### Mapper
+
+> 맵퍼 작성
+
+<details>
+<summary>맵퍼 펼치기 / 접기</summary>
+<div markdown="1">
+
+```
+
+```
+
+</div>
+</details>
+
+<br />
+
+### Service
+
+> 서비스 작성
+
+<details>
+<summary>서비스 펼치기 / 접기</summary>
+<div markdown="1">
+
+```
+
+```
+
+</div>
+</details>
+
+<br />
+
+### Controller
+
+> 컨트롤러 작성
+
+<details>
+<summary>컨트롤러 펼치기 / 접기</summary>
+<div markdown="1">
+
+```
+
+```
+
+</div>
+</details>
