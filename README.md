@@ -2,7 +2,7 @@
 
 > 나를 위한 This & That Repository
 
-- ### [Code Style Guide]()
+- ### Code Style Guide
 
   1. [JavaScript](https://github.com/worldsource93/this_and_that/tree/main/CodeStyleGuide/JavaScript)
   1. [React](https://github.com/worldsource93/this_and_that/tree/main/CodeStyleGuide/React)
@@ -11,7 +11,7 @@
 
 <br />
 
-- ### [Doodling Notes](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes)
+- ### Doodling Notes
 
   1. [Retrospective](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Retrospective)
   1. [Works](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Works)

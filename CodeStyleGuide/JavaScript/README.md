@@ -1311,3 +1311,187 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
     }
   }
   ```
+
+<br />
+
+- 9.2 상속에는 `extends`를 사용하자.
+
+  > `extends`는 `instanceof`를 파괴하지 않고 프로토타입 기능을 상속할 수 있는 기본 제공 방법이다.
+
+  ```
+  // bad
+  const inherits = require('inherits');
+  function PeekableQueue(contents) {
+    Queue.apply(this, contents);
+  }
+  inherits(PeekableQueue, Queue);
+  PeekableQueue.prototype.peek = function () {
+    return this.queue[0];
+  };
+
+  // good
+  class PeekableQueue extends Queue {
+    peek() {
+      return this.queue[0];
+    }
+  }
+  ```
+
+<br />
+
+- 9.3 메서드는 메서드 체이닝을 도울 수 있도록 이 값을 반환할 수 있다.
+
+  ```
+  // bad
+  Jedi.prototype.jump = function () {
+    this.jumping = true;
+    return true;
+  };
+
+  Jedi.prototype.setHeight = function (height) {
+    this.height = height;
+  };
+
+  const luke = new Jedi();
+  luke.jump(); // => true
+  luke.setHeight(20); // => undefined
+
+  // good
+  class Jedi {
+    jump() {
+      this.jumping = true;
+      return this;
+    }
+
+    setHeight(height) {
+      this.height = height;
+      return this;
+    }
+  }
+
+  const luke = new Jedi();
+
+  luke.jump()
+    .setHeight(20);
+
+  console.log(luke); // Jedi { jumping: true, height: 20 }
+  ```
+
+<br />
+
+- 9.4 커스텀 `toString()`메서드를 작성해도 괜찮다. 성공적으로 작동하는지, side effects를 일으키지 않는지 확인하자.
+
+  ```
+  class Jedi {
+    constructor(options = {}) {
+      this.name = options.name || 'no name';
+    }
+
+    getName() {
+      return this.name;
+    }
+
+    toString() {
+      return `Jedi - ${this.getName()}`;
+    }
+  }
+  ```
+
+  <br />
+
+- 9.5 클래스는 지정되지 않은 경우, 기본 생성자를 가진다. 빈 생성자 함수 또는 부모 클래스에 위임하는 함수만 사용할 수 있다. eslint: <a href="https://eslint.org/docs/rules/no-useless-constructor" target="_blank">`no-useless-constructor`</a>
+
+  ```
+  // bad
+  class Jedi {
+    constructor() {}
+
+    getName() {
+      return this.name;
+    }
+  }
+
+  // bad
+  class Rey extends Jedi {
+    constructor(...args) {
+      super(...args);
+    }
+  }
+
+  // good
+  class Rey extends Jedi {
+    constructor(...args) {
+      super(...args);
+      this.name = 'Rey';
+    }
+  }
+  ```
+
+<br />
+
+- 9.6 class members의 중복을 피하자.
+
+  > 중복된 class member 선언은 마지막 선언을 자동으로 호출한다. 중복이 있는 것은 버그와 다름없다.
+
+  ```
+  // bad
+  class Foo {
+    bar() { return 1; }
+    bar() { return 2; }
+  }
+
+  // good
+  class Foo {
+    bar() { return 1; }
+  }
+
+  // good
+  class Foo {
+    bar() { return 2; }
+  }
+  ```
+
+<br />
+
+- 9.7 외부 라이브러리 또는 프레임워크에서 특정 non-static 메서드 사용을 요구하지 않는 경우, 클래스 메서드는 `this`를 사용하거나 static 메서드로 만들어야한다. 인스턴스 메서드는 receiver의 속성에 따라 다르게 동작한다는 것을 나타내야 한다. eslint: <a href="" target="_blank">`class-methods-use-this`</a>
+
+> `receiver`라는 개념은 오직 property에 접근했을 때, 임의 코드를 실행할 수 있는 경우에만 관련이 있다. `Accessor properties`를 의미하며, `receiver`는 일반적으로 속성을 정의한 객체나 속성을 상속하는 다른 객체를 의미한다.
+
+> FIXME: doodling notes에 `prototype`과 `instance` 정리 후 연관지어서 내용 수정하기
+> <br />
+
+```
+// bad
+class Foo {
+  bar() {
+    console.log('bar');
+  }
+}
+
+// good - this is used
+class Foo {
+  bar() {
+    console.log(this.bar);
+  }
+}
+
+// good - constructor is exempt
+class Foo {
+  constructor() {
+    // ...
+  }
+}
+
+// good - static methods aren't expected to use this
+class Foo {
+  static bar() {
+    console.log('bar');
+  }
+}
+```
+
+☝ [목록으로 돌아가기](#목록)
+
+---
+
+## Modules
