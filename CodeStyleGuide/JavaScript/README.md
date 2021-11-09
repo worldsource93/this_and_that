@@ -1453,45 +1453,226 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 
 <br />
 
-- 9.7 외부 라이브러리 또는 프레임워크에서 특정 non-static 메서드 사용을 요구하지 않는 경우, 클래스 메서드는 `this`를 사용하거나 static 메서드로 만들어야한다. 인스턴스 메서드는 receiver의 속성에 따라 다르게 동작한다는 것을 나타내야 한다. eslint: <a href="" target="_blank">`class-methods-use-this`</a>
+- 9.7 외부 라이브러리 또는 프레임워크에서 특정 non-static 메서드 사용을 요구하지 않는 경우, 클래스 메서드는 `this`를 사용하거나 static 메서드로 만들어야한다. 인스턴스 메서드는 receiver의 속성에 따라 다르게 동작한다는 것을 나타내야 한다. eslint: <a href="https://eslint.org/docs/rules/class-methods-use-this" target="_blank">`class-methods-use-this`</a>
 
-> `receiver`라는 개념은 오직 property에 접근했을 때, 임의 코드를 실행할 수 있는 경우에만 관련이 있다. `Accessor properties`를 의미하며, `receiver`는 일반적으로 속성을 정의한 객체나 속성을 상속하는 다른 객체를 의미한다.
+  > `receiver`라는 개념은 오직 property에 접근했을 때, 임의 코드를 실행할 수 있는 경우에만 관련이 있다. `Accessor properties`를 의미하며, `receiver`는 일반적으로 속성을 정의한 객체나 속성을 상속하는 다른 객체를 의미한다.
 
-> FIXME: doodling notes에 `prototype`과 `instance` 정리 후 연관지어서 내용 수정하기
-> <br />
+  > FIXME: doodling notes에 `prototype`과 `instance` 정리 후 연관지어서 내용 수정하기
+  > <br />
 
-```
-// bad
-class Foo {
-  bar() {
-    console.log('bar');
+  ```
+  // bad
+  class Foo {
+    bar() {
+      console.log('bar');
+    }
   }
-}
 
-// good - this is used
-class Foo {
-  bar() {
-    console.log(this.bar);
+  // good - this is used
+  class Foo {
+    bar() {
+      console.log(this.bar);
+    }
   }
-}
 
-// good - constructor is exempt
-class Foo {
-  constructor() {
-    // ...
+  // good - constructor is exempt
+  class Foo {
+    constructor() {
+      // ...
+    }
   }
-}
 
-// good - static methods aren't expected to use this
-class Foo {
-  static bar() {
-    console.log('bar');
+  // good - static methods aren't expected to use this
+  class Foo {
+    static bar() {
+      console.log('bar');
+    }
   }
-}
-```
+  ```
 
 ☝ [목록으로 돌아가기](#목록)
 
 ---
 
 ## Modules
+
+- 10.1 항상 비표준 모듈 시스템을 통해 모듈(`import`/`export`)을 사용해라.
+
+  > `Modules are the future, let’s start using the future now.`
+
+  > 모듈이 미래다? 미래지향적이다..? 라는 의미 같다.
+
+  ```
+  // bad
+  const AirbnbStyleGuide = require('./AirbnbStyleGuide');
+  module.exports = AirbnbStyleGuide.es6;
+
+  // ok
+  import AirbnbStyleGuide from './AirbnbStyleGuide';
+  export default AirbnbStyleGuide.es6;
+
+  // best
+  import { es6 } from './AirbnbStyleGuide';
+  export default es6;
+  ```
+
+<br />
+
+- 10.2 `wildcard imports`를 사용하지마라.
+
+  > 이렇게 하면 default export가 한개뿐이다.
+
+  ```
+  // bad
+  import * as AirbnbStyleGuide from './AirbnbStyleGuide';
+
+  // good
+  import AirbnbStyleGuide from './AirbnbStyleGuide';
+  ```
+
+<br />
+
+- 10.3 `import`에서 직접 `export` 하지마라.
+
+  > 비록 one-liner는 간결하지만, 명확한 한가지의 import, export 방식은 모든 것을 일관성 있게한다.
+
+  ```
+  // bad
+  // filename es6.js
+  export { es6 as default } from './AirbnbStyleGuide';
+
+  // good
+  // filename es6.js
+  import { es6 } from './AirbnbStyleGuide';
+  export default es6;
+  ```
+
+- 10.4 동일 출처에서는 한번의 import를 사용하자. eslint: <a href="https://eslint.org/docs/rules/no-duplicate-imports" target="_blank">`no-duplicate-imports`</a>
+
+  > 동일한 경로에서 가져오는 줄이 여러 개 있으면 코드의 유지보수성이 떨어진다.
+
+  ```
+  // bad
+  import foo from 'foo';
+  // … some other imports … //
+  import { named1, named2 } from 'foo';
+
+  // good
+  import foo, { named1, named2 } from 'foo';
+
+  // good
+  import foo, {
+    named1,
+    named2,
+  } from 'foo';
+  ```
+
+<br />
+
+- 10.5 `mutable bindings`를 export 하지마라. eslint: <a href="https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-mutable-exports.md" target="_blank">`import/no-mutable-exports`</a>
+
+  > Mutation은 피해야하지만, mutable bindings를 export할 때 피해야 한다. 일부 특수한 경우에는 이 기법이 필요할 수 있지만, 일반적으로 constant references만 export 해야한다.
+
+  ```
+  // bad
+  let foo = 3;
+  export { foo };
+
+  // good
+  const foo = 3;
+  export { foo };
+  ```
+
+<br />
+
+- 10.6 single export가 있는 모듈의 경우, named export보다 default export를 선호합니다. eslint: <a href="https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md" target="_blank"></a>
+
+  > default export는 더 많은 파일을 생성하도록 하여 가독성과 유지보수성에 좋다.
+
+  ```
+  // bad
+  export function foo() {}
+
+  // good
+  export default function foo() {}
+  ```
+
+<br />
+
+- 10.7 모든 import를 non-import문 위에 놓자. eslint: <a href="https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/first.md" target="_blank">`import/first`</a>
+
+  > 모든 import는 끌어올려지기(hoisted) 때문에, import를 가장 상단에 위치시키는 것은 의도치 않은 행동을 예방한다.
+
+  ```
+  // bad
+  import foo from 'foo';
+  foo.init();
+
+  import bar from 'bar';
+
+  // good
+  import foo from 'foo';
+  import bar from 'bar';
+
+  foo.init();
+  ```
+
+<br />
+
+- 10.8 여러줄로 된 import는 array나 object와 같은 들여쓰기 규칙을 준수하자. eslint: <a href="https://eslint.org/docs/rules/object-curly-newline" target="_blank">`object-curly-newline`</a>
+
+  > 중괄호는 후행 쉼표와 마찬가지로 스타일 가이드의 다른 중괄호 블록과 동일한 들여쓰기 규칙을 따른다.
+
+  ```
+  // bad
+  import {longNameA, longNameB, longNameC, longNameD, longNameE} from   'path';
+
+  // good
+  import {
+    longNameA,
+    longNameB,
+    longNameC,
+    longNameD,
+    longNameE,
+  } from 'path';
+  ```
+
+<br />
+
+- 10.9 모듈 import문에서 웹팩 로더 구문을 허용하지 않는다. eslint: <a href="https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-webpack-loader-syntax.md" target="_blank">`import/no-webpack-loader-syntax`</a>
+
+  > import에서 웹팩 구문을 사용한 이후 코드를 모듈 번들러와 결합한다. `webpack. config.js`에서 로더 구문을 사용하는것을 선호하자.
+
+  ```
+  // bad
+  import fooSass from 'css!sass!foo.scss';
+  import barCss from 'style!css!bar.css';
+
+  // good
+  import fooSass from 'foo.scss';
+  import barCss from 'bar.css';
+  ```
+
+<br />
+
+- 10.10 JavaScript 파일이름에 확장자를 포함시키지 말자. eslint: <a href="https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/extensions.md" target="_blank">`import/extension`</a>
+
+  > 확장자를 포함하면 리팩토링이 금지되고 가져오려는 모듈의 구현 세부 정보가 부적절하게 하드코드로 노출된다.
+
+  ```
+  // bad
+  import foo from './foo.js';
+  import bar from './bar.jsx';
+  import baz from './baz/index.jsx';
+
+  // good
+  import foo from './foo';
+  import bar from './bar';
+  import baz from './baz';
+  ```
+
+  ☝ [목록으로 돌아가기](#목록)
+
+---
+
+## Iterators and Generators
