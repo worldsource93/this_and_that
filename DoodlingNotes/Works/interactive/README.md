@@ -392,7 +392,209 @@ WHERE idx = 1;
 <div markdown="1">
 
 ```
+public class AdminUserModel {
+	private Integer idx;
+	private String username;
+	private String passwd;
+	private Date created_date;
 
+	public Integer getIdx() {
+		return idx;
+	}
+	public void setIdx(Integer idx) {
+		this.idx = idx;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPasswd() {
+		return passwd;
+	}
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	public Date getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+}
+```
+
+```
+public class AdminUserLogModel {
+	private Integer idx;
+	private Integer conn_id;
+	private String conn_addr;
+	private Date created_date;
+
+	public Integer getIdx() {
+		return idx;
+	}
+	public void setIdx(Integer idx) {
+		this.idx = idx;
+	}
+	public Integer getConn_id() {
+		return conn_id;
+	}
+	public void setConn_id(Integer conn_id) {
+		this.conn_id = conn_id;
+	}
+	public String getConn_addr() {
+		return conn_addr;
+	}
+	public void setConn_addr(String conn_addr) {
+		this.conn_addr = conn_addr;
+	}
+	public Date getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+}
+```
+
+```
+public class BoardModel {
+	private Integer idx;
+	private String writer;
+	private String title;
+	private String contents;
+	private String passwd;
+	private Date created_date;
+	private Date updated_date;
+	private String type_code;
+
+	public Integer getIdx() {
+		return idx;
+	}
+	public void setIdx(Integer idx) {
+		this.idx = idx;
+	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContents() {
+		return contents;
+	}
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+	public String getPasswd() {
+		return passwd;
+	}
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	public Date getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+	public Date getUpdated_date() {
+		return updated_date;
+	}
+	public void setUpdated_date(Date updated_date) {
+		this.updated_date = updated_date;
+	}
+	public String getType_code() {
+		return type_code;
+	}
+	public void setType_code(String type_code) {
+		this.type_code = type_code;
+	}
+}
+```
+
+```
+public class ReplyModel {
+	private Integer idx;
+	private String writer;
+	private String contents;
+	private String passwd;
+	private Integer post_num;
+	private Date created_date;
+	private Date updated_date;
+	private Integer step;
+	private Integer reply_num;
+	private Integer group_num;
+
+	public Integer getIdx() {
+		return idx;
+	}
+	public void setIdx(Integer idx) {
+		this.idx = idx;
+	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+	public String getContents() {
+		return contents;
+	}
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+	public String getPasswd() {
+		return passwd;
+	}
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	public Integer getPost_num() {
+		return post_num;
+	}
+	public void setPost_num(Integer post_num) {
+		this.post_num = post_num;
+	}
+	public Date getCreated_date() {
+		return created_date;
+	}
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+	public Date getUpdated_date() {
+		return updated_date;
+	}
+	public void setUpdated_date(Date updated_date) {
+		this.updated_date = updated_date;
+	}
+	public Integer getStep() {
+		return step;
+	}
+	public void setStep(Integer step) {
+		this.step = step;
+	}
+	public Integer getReply_num() {
+		return reply_num;
+	}
+	public void setReply_num(Integer reply_num) {
+		this.reply_num = reply_num;
+	}
+	public Integer getGroup_num() {
+		return group_num;
+	}
+	public void setGroup_num(Integer group_num) {
+		this.group_num = group_num;
+	}
+}
 ```
 
 </div>
@@ -409,7 +611,80 @@ WHERE idx = 1;
 <div markdown="1">
 
 ```
+@Mapper
+public interface AdminUserMapper {
 
+	public List<Map<String, Object>> getUserList();
+
+	public AdminUserModel getUser(Integer idx);
+
+	public AdminUserModel getUserPasswd(Integer idx);
+
+	public boolean validateUserPasswd(AdminUserModel params);
+
+	public int create(AdminUserModel user);
+
+	public void update(AdminUserModel user);
+
+	public void delete(AdminUserModel user);
+
+}
+```
+
+```
+@Mapper
+public interface AdminUserLogMapper {
+
+	public List<Map<String, Object>> getLogList();
+
+	public AdminUserLogModel getLog(Integer idx);
+
+	public int create(AdminUserLogModel log);
+
+	public void update(AdminUserLogModel log);
+
+	public void delete(Integer idx);
+
+}
+```
+
+```
+@Mapper
+public interface BoardMapper {
+
+	public List<Map<String, Object>> getBoardListAll();
+
+	public List<Map<String, Object>> getBoardListByType(String type_code);
+
+	public BoardModel getBoard(Integer idx);
+
+	public boolean validateBoardPasswd(BoardModel params);
+
+	public int create(BoardModel board);
+
+	public void update(BoardModel board);
+
+	public void delete(Integer idx);
+
+}
+```
+
+```
+@Mapper
+public interface ReplyMapper {
+
+	public List<Map<String, Object>> getReplyList(Integer post_num);
+
+	public ReplyModel getReply(Integer idx);
+
+	public boolean validatePasswd(ReplyModel params);
+
+	public int create(ReplyModel reply);
+
+	public void update(ReplyModel reply);
+
+	public void delete(Integer idx);
+}
 ```
 
 </div>
@@ -426,7 +701,391 @@ WHERE idx = 1;
 <div markdown="1">
 
 ```
+@Service
+public class AdminUserService extends BaseService {
 
+	@Autowired
+	public AdminUserMapper adminUserMapper;
+
+	public List<Map<String, Object>> getList() {
+
+		try {
+
+			return adminUserMapper.getUserList();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public AdminUserModel getUser(Integer idx) {
+		try {
+
+			return adminUserMapper.getUser(idx);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean validatePasswd(String username, String passwd) {
+		try {
+
+			AdminUserModel param = new AdminUserModel();
+			param.setUsername(username);
+			param.setPasswd(passwd);
+
+			return adminUserMapper.validateUserPasswd(param);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public AdminUserModel createUser(String username, String passwd) {
+		try {
+
+			AdminUserModel user = new AdminUserModel();
+			user.setUsername(username);
+			user.setPasswd(passwd);
+
+			adminUserMapper.create(user);
+			return user;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public AdminUserModel updateUser(Integer idx, String username) {
+		try {
+
+			AdminUserModel user = getUser(idx);
+			user.setUsername(username);
+			adminUserMapper.update(user);
+
+			return user;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean deleteUser(Integer idx) {
+		try {
+
+			AdminUserModel adminUser = new AdminUserModel();
+			adminUserMapper.delete(adminUser);
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+}
+```
+
+```
+@Service
+public class AdminUserLogService extends BaseService {
+
+	@Autowired
+	private AdminUserLogMapper adminUserLogMapper;
+
+	public List<Map<String, Object>> getUserLogList() {
+		try {
+			return adminUserLogMapper.getLogList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public AdminUserLogModel getUserLog(Integer idx) {
+		try {
+			return adminUserLogMapper.getLog(idx);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public AdminUserLogModel createUserLog(Integer conn_id, String conn_addr) {
+		try {
+
+			AdminUserLogModel adminUserLog = new AdminUserLogModel();
+			adminUserLog.setConn_id(conn_id);
+			adminUserLog.setConn_addr(conn_addr);
+
+			adminUserLogMapper.create(adminUserLog);
+
+			return adminUserLog;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public AdminUserLogModel updateUserLog(Integer idx, Integer conn_id, String conn_addr) {
+		try {
+			AdminUserLogModel adminUserLog = getUserLog(idx);
+			adminUserLog.setConn_id(conn_id);
+			adminUserLog.setConn_addr(conn_addr);
+
+			adminUserLogMapper.update(adminUserLog);
+
+			return adminUserLog;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean deleteUserLog(Integer idx) {
+		try {
+			adminUserLogMapper.delete(idx);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+}
+```
+
+```
+@Service
+public class BoardService extends BaseService {
+
+	@Autowired
+	private BoardMapper boardMapper;
+
+	public List<Map<String, Object>> getBoardListAll() {
+		try {
+			return boardMapper.getBoardListAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<Map<String, Object>> getBoardListByType(String type_code) {
+		try {
+			return boardMapper.getBoardListByType(type_code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public BoardModel getBoard(Integer idx) {
+		try {
+
+			BoardModel result = boardMapper.getBoard(idx);
+			return result;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean validatePasswd(Integer idx, String passwd) {
+		try {
+			BoardModel params = new BoardModel();
+			params.setIdx(idx);
+			params.setPasswd(passwd);
+
+			boolean result = boardMapper.validateBoardPasswd(params);
+
+			return result;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public BoardModel createBoard(String writer, String title, String contents, String passwd, String type_code) {
+		try {
+
+			BoardModel board = new BoardModel();
+			board.setWriter(writer);
+			board.setTitle(title);
+			board.setContents(contents);
+			board.setPasswd(passwd);
+			board.setType_code(type_code);
+
+			boardMapper.create(board);
+
+			return board;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public BoardModel updateBoard(Integer idx, String title, String contents, String passwd, String type_code) {
+		try {
+
+			boolean isValid = validatePasswd(idx, passwd);
+
+			if(isValid) {
+				BoardModel board = getBoard(idx);
+				board.setTitle(title);
+				board.setContents(contents);
+				board.setPasswd(passwd);
+				board.setType_code(type_code);
+
+				boardMapper.update(board);
+
+				return board;
+			} else {
+				return null;
+			}
+
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean deleteBoard(Integer idx, String passwd) {
+		try {
+
+			boolean isValid = validatePasswd(idx, passwd);
+
+			if(isValid) {
+				boardMapper.delete(idx);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+}
+```
+
+```
+@Service
+public class ReplyService extends BaseService {
+
+	@Autowired
+	private ReplyMapper replyMapper;
+
+	public List<Map<String, Object>> getReplyListByPostNum(Integer post_num) {
+		try {
+			return replyMapper.getReplyList(post_num);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public ReplyModel getReply(Integer idx) {
+		try {
+
+			ReplyModel result = replyMapper.getReply(idx);
+			return result;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean validatePasswd(Integer idx, String passwd) {
+		try {
+			ReplyModel params = new ReplyModel();
+			params.setIdx(idx);
+			params.setPasswd(passwd);
+
+			boolean result = replyMapper.validatePasswd(params);
+
+			return result;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	public ReplyModel createReply(String writer, String contents, Integer post_num, String passwd, Integer step, Integer reply_num, Integer group_num) {
+		try {
+
+			ReplyModel reply = new ReplyModel();
+			reply.setWriter(writer);
+			reply.setContents(contents);
+			reply.setPost_num(post_num);
+			reply.setPasswd(passwd);
+			reply.setStep(step);
+			reply.setReply_num(reply_num);
+			reply.setGroup_num(group_num);
+
+			replyMapper.create(reply);
+
+			return reply;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public ReplyModel updateReply(Integer idx, String contents, String passwd) {
+		try {
+
+			ReplyModel reply = getReply(idx);
+
+			if(!reply.getPasswd().equals(passwd)) {
+				return null;
+			}
+
+			reply.setContents(contents);
+			reply.setPasswd(passwd);
+
+			replyMapper.update(reply);
+
+			return reply;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public boolean deleteReply(Integer idx, String passwd) {
+		try {
+
+			boolean isValid = validatePasswd(idx, passwd);
+
+			if(isValid) {
+				replyMapper.delete(idx);
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+}
 ```
 
 </div>
@@ -443,7 +1102,296 @@ WHERE idx = 1;
 <div markdown="1">
 
 ```
+@Controller
+@RequestMapping("/api")
+public class ApiController extends BaseController {
 
+  @Autowired
+	private AdminUserService adminUserService;
+
+	@Autowired
+	private AdminUserLogService adminUserLogService;
+
+	@Autowired
+	private BoardService boardService;
+
+	@Autowired
+	private ReplyService replyService;
+
+  /**
+	 * 관리자 계정 리스트 조회
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/userList", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseData> getAdminUserList() throws Exception {
+
+		List<Map<String, Object>> result = null;
+
+		result = adminUserService.getList();
+
+
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+
+	/**
+	 * 관리자 계정 생성
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/createAdminUser", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> createAdminUser(
+			@RequestParam(value = "username", required = true) String username,
+			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
+
+		AdminUserModel result = adminUserService.createUser(username, passwd);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 업데이트
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/updateAdminUser", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> updateAdminUser(
+			@RequestParam(value = "idx", required = true) Integer idx,
+			@RequestParam(value = "username", required = true) String username) throws Exception {
+
+		AdminUserModel result = adminUserService.updateUser(idx, username);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 삭제
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/deleteAdminUser", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> deleteAdminUser(
+			@RequestParam(value = "idx", required = true) Integer idx) throws Exception {
+
+		boolean result = adminUserService.deleteUser(idx);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 로그 리스트 조회
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/userLogList", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseData> getAdminUserLogList() throws Exception {
+
+		List<Map<String, Object>> result = null;
+
+		result = adminUserLogService.getUserLogList();
+
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 로그 생성
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/createAdminUserLog", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> createAdminUserLog(
+			@RequestParam(value = "conn_id", required = true) Integer conn_id,
+			@RequestParam(value = "conn_addr", required = true) String conn_addr) throws Exception {
+
+		AdminUserLogModel result = adminUserLogService.createUserLog(conn_id, conn_addr);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 로그 업데이트
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/updateAdminUserLog", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> updateAdminUserLog(
+			@RequestParam(value = "conn_id", required = true) Integer idx,
+			@RequestParam(value = "conn_id", required = true) Integer conn_id,
+			@RequestParam(value = "conn_addr", required = true) String conn_addr) throws Exception {
+
+		AdminUserLogModel result = adminUserLogService.updateUserLog(idx, conn_id, conn_addr);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 관리자 계정 로그 삭제
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/deleteAdminUserLog", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> deleteAdminUserLog(
+			@RequestParam(value = "idx", required = true) Integer idx) throws Exception {
+
+		boolean result = adminUserLogService.deleteUserLog(idx);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 타입 코드 별 익명 게시글 리스트 조회
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/boardList", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseData> getBoardList(String type_code) throws Exception {
+
+		List<Map<String, Object>> result = null;
+
+		result = boardService.getBoardListByType(type_code);
+
+		return new ResponseEntity<ResponseData>(responseBody(result), HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 게시글 생성
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/createBoard", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> createBoard(
+			@RequestParam(value = "writer", required = true) String writer,
+			@RequestParam(value = "title", required = true) String title,
+			@RequestParam(value = "contents", required = true) String contents,
+			@RequestParam(value = "passwd", required = true) String passwd,
+			@RequestParam(value = "type_code", required = true) String type_code) throws Exception {
+
+		BoardModel result = boardService.createBoard(writer, title, contents, passwd, type_code);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 게시글 업데이트
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/updateBoard", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> updateBoard(
+			@RequestParam(value = "idx", required = true) Integer idx,
+			@RequestParam(value = "title", required = true) String title,
+			@RequestParam(value = "contents", required = true) String contents,
+			@RequestParam(value = "passwd", required = true) String passwd,
+			@RequestParam(value = "type_code", required = true) String type_code) throws Exception {
+
+		BoardModel result = boardService.updateBoard(idx, title, contents, passwd, type_code);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 게시글 삭제
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/deleteBoard", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> deleteBoard(
+			@RequestParam(value = "idx", required = true) Integer idx,
+			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
+
+		boolean result = boardService.deleteBoard(idx, passwd);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 게시글에 달린 댓글 대댓글 조회
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/ReplyList", method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<ResponseData> getReplyListByPostNum(Integer post_num) throws Exception {
+
+		List<Map<String, Object>> result = null;
+
+		result = replyService.getReplyListByPostNum(post_num);
+
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 댓글 대댓글 생성
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/anonymous/createReply", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> createReply(
+			@RequestParam(value = "writer", required = true) String writer,
+			@RequestParam(value = "contents", required = true) String contents,
+			@RequestParam(value = "post_num", required = true) Integer post_num,
+			@RequestParam(value = "passwd", required = true) String passwd,
+			@RequestParam(value = "step", required = true) Integer step,
+			@RequestParam(value = "reply_num", required = true) Integer reply_num,
+			@RequestParam(value = "group_num", required = true) Integer group_num) throws Exception {
+
+		ReplyModel result = replyService.createReply(writer, contents, post_num, passwd, step, reply_num, group_num);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 댓글 대댓글 업데이트
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/anonymous/updateReply", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> updateReply(
+			@RequestParam(value = "idx", required = true) Integer idx,
+			@RequestParam(value = "contents", required = true) String contents,
+			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
+
+		ReplyModel result = replyService.updateReply(idx, contents, passwd);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * 익명 댓글 대댓글 삭제
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/anonymous/deleteReply", method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ResponseData> deleteReply(
+			@RequestParam(value = "idx", required = true) Integer idx,
+			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
+
+		boolean result = replyService.deleteReply(idx, passwd);
+		return new ResponseEntity<ResponseData>(responseBody(result),
+				HttpStatus.OK);
+	}
+}
 ```
 
 </div>
