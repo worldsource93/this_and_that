@@ -25,9 +25,9 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 1. [Arrow Functions](#arrow-functions)
 1. [Classes & Constructors](#classes-&-constructors)
 1. [Modules](#modules)
-1. Iterators and Generators
-1. Properties
-1. Variables
+1. [Iterators and Generators](#iterators-and-generators)
+1. [Properties](#properties)
+1. [Variables](#variables)
 1. Hoisting
 1. Comparison Operators & Equality
 1. Blocks
@@ -1676,3 +1676,171 @@ Javascript에 대한 가장 합리적인 접근 방식 소개
 ---
 
 ## Iterators and Generators
+
+- 11.1 iterators를 사용하지마라. `For-in`이나 `For-of`와 같은 루프 대신 자바스크립트의 고차함수를 사용하자.
+  eslint: <a href="https://eslint.org/docs/rules/no-iterator.html" target="_blank">`no-iterator`</a>, <a href="https://eslint.org/docs/rules/no-restricted-syntax" target="_blank">`no-restricted-syntax`</a>
+
+  > 고차함수를 사용함으로써 불변의 법칙이 성립된다. 값을 반환하는 순수 함수를 다루는 것은 side effects보다 추론하기 쉽다.
+
+  > `map()`, `every()`, `filter()`, `find()`, `findIndex()`, `reduce()`,`some()` 등을 사용하여 배열을 반복하고, `Object.keys()`, `Object.values()`, `Object.entries()`를 사용하여 객체를 반복할 수 있도록 배열을 생성하자.
+
+  ```
+  const numbers = [1, 2, 3, 4, 5];
+
+  // bad
+  let sum = 0;
+  for (let num of numbers) {
+    sum += num;
+  }
+  sum === 15;
+
+  // good
+  let sum = 0;
+  numbers.forEach((num) => {
+    sum += num;
+  });
+  sum === 15;
+
+  // best (use the functional force)
+  const sum = numbers.reduce((total, num) => total + num, 0);
+  sum === 15;
+
+  // bad
+  const increasedByOne = [];
+  for (let i = 0; i < numbers.length; i++) {
+    increasedByOne.push(numbers[i] + 1);
+  }
+
+  // good
+  const increasedByOne = [];
+  numbers.forEach((num) => {
+    increasedByOne.push(num + 1);
+  });
+
+  // best (keeping it functional)
+  const increasedByOne = numbers.map((num) => num + 1);
+  ```
+
+<br />
+
+- 11.2 Generators를 사용하지마라.
+
+  > ES5로 변환이 잘 되지 않는다.
+
+<br />
+
+- 11.3 만약, Generators를 꼭 사용해야하는 경우가 생긴다면 Generators의 function signature의 위치가 적절한지 확인해야한다. eslint:<a href="https://eslint.org/docs/rules/generator-star-spacing" target="_blank">`generator-start-spacing`</a>
+
+  > 함수와 `*`는 동일한 개념 키워드의 일부이다. `*`는 함수의 한정자가 아니고 function\*는 function과는 다른 고유한 구성이다.
+
+  ```
+  // bad
+  function * foo() {
+    // ...
+  }
+
+  // bad
+  const bar = function * () {
+    // ...
+  };
+
+  // bad
+  const baz = function *() {
+    // ...
+  };
+
+  // bad
+  const quux = function*() {
+    // ...
+  };
+
+  // bad
+  function*foo() {
+    // ...
+  }
+
+  // bad
+  function *foo() {
+    // ...
+  }
+
+  // very bad
+  function
+  *
+  foo() {
+    // ...
+  }
+
+  // very bad
+  const wat = function
+  *
+  () {
+    // ...
+  };
+
+  // good
+  function* foo() {
+    // ...
+  }
+
+  // good
+  const foo = function* () {
+    // ...
+  };
+  ```
+
+☝ [목록으로 돌아가기](#목록)
+
+---
+
+## Properties
+
+- 12.1 속성에 접근할 때에는 점 표기법을 사용하자. eslint: <a href="https://eslint.org/docs/rules/dot-notation.html" target="_blank">`dot-notation`</a>
+
+  ```
+  const luke = {
+    jedi: true,
+    age: 28,
+  };
+
+  // bad
+  const isJedi = luke['jedi'];
+
+  // good
+  const isJedi = luke.jedi;
+  ```
+
+<br />
+
+- 12.2 변수를 사용해서 속성에 접근할 때는 괄호 표기법 `[]`을 사용하자.
+
+  ```
+  const luke = {
+    jedi: true,
+    age: 28,
+  };
+
+  function getProp(prop) {
+    return luke[prop];
+  }
+
+  const isJedi = getProp('jedi');
+  ```
+
+  <br />
+
+- 12.3 지수 계산 시 지수 연산자 `**`를 사용하자.
+
+  ```
+  // bad
+  const binary = Math.pow(2, 10);
+
+  // good
+  const binary = 2 ** 10;
+  ```
+
+☝ [목록으로 돌아가기](#목록)
+
+---
+
+## Variables
