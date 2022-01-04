@@ -10,9 +10,9 @@
 
 ### <strong>ToDo</strong>
 
-- 관리자 로그인, 로그아웃, 패스워드 변경 기능
-- 관리자 계정 로그관리
-- 게시판(댓글, 대댓글)
+- 관리자 스프링 시큐리티 로그인, 로그아웃, 패스워드 변경 기능
+- 관리자 계정 로그인 로그관리
+- 게시판 댓글, 대댓글, 페이징, 검색, 관리자 세션 확인, 게시글 및 댓글 관리자 삭제 기능
 - 위 기능에 필요한 데이터베이스 구축, Back-end 개발, Front-end 개발
 
 <br />
@@ -20,17 +20,17 @@
 ### <strong>Requirements</strong>
 
 - session을 사용한 로그인 기능 구현
-- 패스워드 암호화 전송, 단방향 암호화 알고리즘 사용(SHA-256 -> Bcrypt)
-- 게시판, 댓글, 대댓글의 익명성
-- Sequence 필수
+- 패스워드 암호화 전송, 단방향 암호화 알고리즘 사용, 이중암호화(SHA-256 -> Bcrypt)
+- 게시글, 댓글, 대댓글의 익명성
+- 관리자의 경우 게시글, 댓글, 대댓글을 비밀번호 입력 없이 삭제할 수 있도록 구현
+- 게시글, 댓글 Sequence 필수
 - 게시판 데이터베이스와 댓글 & 대댓글 데이터베이스의 분리
 - 게시판 및 댓글 대댓글 작성시간은 timestamp로 관리
-- API 생성 시, 모든 기능에 대한 CRUD
-- 컨트롤러 단에서 return json 형태
+- 필요기능의 REST API 작성
 
 ### <strong>Use</strong>
 
-- Java 1.8 & Jsp
+- Java 1.8 & JSP
 - PostgreSQL
 
 <br />
@@ -89,45 +89,54 @@
 
 > 테이블 컬럼을 정해보자.
 
-- 로그인 테이블
-  - idx: 관리자 계정 인덱스 // integer, sequence auto increment
-  - username: 관리자 아이디 // character varying
-  - passwd: 관리자 패스워드 // character varying
+- 계정 테이블
+  - idx: 관리자 계정 인덱스 			// integer, sequence auto increment
+  - username: 관리자 아이디 			// character varying
+  - password: 관리자 패스워드 			// character varying
   - created_date: 작성된 날짜시간 // timestamp with timezone
 
 <br />
 
 - 로그관리 테이블
-  - idx: 로그 인덱스
-  - conn_id: 관리자 계정 인덱스
-  - conn_addr: 접속 IP
-  - created_date: 작성된 날짜시간
+  - idx: 로그 인덱스								// integger, sequence auto increment
+  - conn_id: 관리자 계정 인덱스			// integer
+  - conn_addr: 접속 IP						 // character varying
+  - created_date: 작성된 날짜시간	 // timestamp with time zone
+
+<br />
+
+- 계정 권한 테이블
+  - idx: 계정 권한 인덱스					// integger, sequence auto increment
+  - user_idx: 관리자 계정 인덱스	// integer
+  - authority: 권한					 		 // character varying
 
 <br />
 
 - 익명 게시판 테이블
-  - idx: 게시글 인덱스 // integer, sequence auto increment
-  - writer: 익명의 작성자 // character varying
-  - title: 게시글 제목 // character varying
-  - contents: 게시글 내용 // text
-  - passwd: 글의 수정, 삭제 시 필요 // character varying
-  - created_date: 작성된 날짜시간 // timestamp with timezone
+  - idx: 게시글 인덱스								// integer, sequence auto increment
+  - writer: 익명의 작성자							// character varying
+  - title: 게시글 제목								// character varying, 30자 이하
+  - contents: 게시글 내용							// text, 1000자 이하
+  - password: 글의 수정, 삭제 시 필요 // character varying
+  - created_date: 작성된 날짜시간			// timestamp with timezone
   - updated_date: 업데이트된 날짜시간 // timestamp with timezone
-  - type_code: 타입코드 // character varying
+  - type_code: 타입코드							  // character varying
+	- deleted : 삭제여부								// boolean
 
 <br />
 
 - 익명 댓글 대댓글 테이블
-  - idx: 댓글 인덱스 // integer, sequence auto increment
-  - writer: 익명의 작성자(무작위 문자열) // character varying
-  - contents: 댓글 내용 // text
-  - passwd: 글의 수정, 삭제 시 필요 // character varying
-  - post_num: 게시글 idx // integer, foreign key 설정
-  - created_date: 작성된 날짜시간 // timestamp with timezone
-  - updated_date: 업데이트된 날짜시간 // timestamp with timezone
-  - step: 댓글과 대댓글을 구분 // integer
-  - reply_num: 댓글과 대댓글 순서 구분 // integer
+  - idx: 댓글 인덱스											  // integer, sequence auto increment
+  - writer: 익명의 작성자(무작위 문자열)	  // character varying
+  - contents: 댓글 내용 									 // text
+  - passwd: 글의 수정, 삭제 시 필요 			 // character varying
+  - post_num: 게시글 idx								  // integer
+  - created_date: 작성된 날짜시간					// timestamp with timezone
+  - updated_date: 업데이트된 날짜시간			// timestamp with timezone
+  - step: 댓글과 대댓글을 구분						// integer
+  - reply_num: 댓글과 대댓글 순서 구분		// integer
   - group_num: 댓글 그룹구분에 사용되며 댓글 인덱스를 부여, 대댓글의 경우 자신 대신 부모의 인덱스를 저장 => 특정 댓글에 종속되어있는 것을 표시 // integer
+	- deleted : 삭제여부										// boolean
 
 <br />
 <br />
@@ -144,8 +153,9 @@
 <summary>테이블 생성 펼치기 / 접기</summary>
 <div markdown="1">
 
+
 ```
-CREATE SEQUENCE public.[테이블명]
+CREATE SEQUENCE public.[테이블 시퀀스명]
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -156,7 +166,7 @@ ALTER SEQUENCE public.[테이블명]
     OWNER TO [DB 유저명];
 ```
 
-> Note: 테이블에서 사용할 sequence를 생성하고 sequence의 오너를 사용중인 DB 유저명으로 변경하였다.
+> Note: 사용할 sequence를 생성하고 sequence의 오너를 사용중인 DB 유저명으로 변경
 
 <br />
 
@@ -169,6 +179,7 @@ CREATE TABLE public.[관리자 테이블명]
     username character varying(64) COLLATE pg_catalog."default" NOT NULL,
     passwd character varying(512) COLLATE pg_catalog."default" NOT NULL,
     created_date timestamp with time zone DEFAULT now(),
+		enabled boolean,
     CONSTRAINT adm_user_pk PRIMARY KEY (idx),
     CONSTRAINT adm_user_username_key UNIQUE (username)
 )
@@ -200,6 +211,28 @@ ALTER TABLE public.[관리자 로그 테이블명]
 ```
 
 ```
+CREATE TABLE public.[계정 권한 테이블명]
+(
+    idx integer NOT NULL DEFAULT nextval('adm_user_role_idx_seq'::regclass),
+    user_idx integer NOT NULL,
+    authority character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT adm_user_role_pk PRIMARY KEY (idx),
+    CONSTRAINT adm_user_role_user_idx_fkey FOREIGN KEY (user_idx)
+        REFERENCES public.adm_user (idx) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.[관리자 로그 테이블명]
+    OWNER to [DB 유저명];
+```
+
+
+```
 CREATE TABLE public.[익명 게시판 테이블명]
 (
     idx integer NOT NULL DEFAULT nextval('anonymous_board_idx_seq'::regclass),
@@ -210,6 +243,7 @@ CREATE TABLE public.[익명 게시판 테이블명]
     created_date timestamp with time zone DEFAULT now(),
     updated_date timestamp with time zone DEFAULT now(),
     type_code character varying(3) COLLATE pg_catalog."default",
+		deleted boolean,
     CONSTRAINT [PK명] PRIMARY KEY (idx)
 )
 WITH (
@@ -234,6 +268,7 @@ CREATE TABLE public.[익명 댓글 대댓글 테이블명]
     step integer NOT NULL,
     reply_num integer NOT NULL,
     group_num integer NOT NULL,
+		deleted boolean,
     CONSTRAINT [PK명] PRIMARY KEY (idx),
     CONSTRAINT [FK명] FOREIGN KEY (post_num)
         REFERENCES public.[익명 테이블 테이블명] (idx) MATCH SIMPLE
@@ -258,344 +293,53 @@ ALTER TABLE public.[익명 댓글 대댓글 테이블명]
 <br />
 <br />
 
-### 쿼리 만들기
-
-> 실제 사용하게 될 쿼리문의 기본틀을 만들어보자.
+### Query
 
 <strong>모든 API 기능에 대해서 CRUD를 작성</strong> 요구사항 조건이 있었다. <br />
 먼저, 만들어야하는 API 기능을 리스트업 해보자.
 
 - API List
   - 관리자 계정
-    - 관리자 계정 CRUD
-    - 관리자 계정 로그 CRUD
-    - 로그인
-    - 로그아웃
-  - 게시판 CRUD
-  - 댓글 대댓글 CRUD
-
-<br />
-
-리스트 업된 목록의 기본틀을 작성해보자. 패스워드의 경우, 클라이언트에서 암호화해서 전달할 예정이고 지금은 사람이 알아볼 수 있는 문자열로 입력한다.
-
-<details>
-<summary>쿼리 펼치기 / 접기</summary>
-<div markdown="1">
-
-```
-// 관리자 계정 Create
-INSERT INTO [관리자 테이블명] (
-  username, passwd
-) VALUES (
-  'test', 'test'
-);
-
-// 관리자 계정 Read
-SELECT * from [관리자 테이블명]
-WHERE username = 'test';
-
-// 관리자 계정 Update
-UPDATE [관리자 테이블명]
-SET passwd = 'test11';
-WHERE username = 'test';
-
-// 관리자 계정 Delete
-DELETE FROM [관리자 테이블명]
-WHERE username = 'test';
-
-// 관리자 계정 로그인
-SELECT *
-FROM [관리자 테이블명]
-WHERE username = 'test'
-AND passwd = 'test'
-```
-
-```
-// 관리자 계정 로그 Create
-INSERT INTO [관리자 로그 테이블명] (
-  conn_id, conn_addr
-) VALUES (
-  1, 'xxx.xx.xx.xx'
-);
-
-// 관리자 계정 로그 Read
-SELECT * from [관리자 로그 테이블명]
-WHERE conn_id = 1;
-
-// 관리자 계정 로그 Update
-UPDATE [관리자 로그 테이블명]
-SET conn_addr = '127.0.0.1';
-WHERE conn_addr = '0.0.0.0';
-
-// 관리자 계정 로그 Delete
-DELETE FROM [관리자 로그 테이블명]
-WHERE conn_addr = '0.0.0.0';
-```
-
-```
-// 게시판 게시글 Create
-INSERT INTO [게시판 테이블명] (
-  writer, title, contents, passwd, type_code
-) VALUES (
-  'anonymous1', '게시글 테스트1', 'Lorem ipsum1', '1234', 'foc'
-);
-
-// 게시판 게시글 Read
-SELECT * from [게시판 테이블명]
-WHERE [컬럼명] = [조건 값];
-
-// 게시판 게시글 Update
-UPDATE [게시판 테이블명]
-SET [업데이트 컬럼명] = [업데이트 값]
-WHERE idx = 1;
-
-// 게시판 게시글 Delete
-DELETE FROM [게시판 테이블명]
-WHERE idx = 1';
-```
-
-```
-// 게시판 댓글 대댓글 Create
-INSERT INTO [댓글 대댓글 테이블명] (
-  writer, contents, passwd, post_num, step, reply_num, group_num
-) VALUES (
-  'anonymous1', '댓글 대댓글 테스트1', '1234', 1, 0, 1, 1
-);
-
-// 게시판 댓글 대댓글 Read
-SELECT * from [댓글 대댓글 테이블명]
-WHERE [컬럼명] = [조건 값];
-
-// 게시판 댓글 대댓글 Update
-UPDATE [ 테이블명]
-SET [업데이트 컬럼명] = [업데이트 값]
-WHERE idx = 1;
-
-// 게시판 댓글 대댓글 Delete
-DELETE FROM [댓글 대댓글 테이블명]
-WHERE idx = 1;
-```
-
-> Notes: 복잡한 쿼리의 경우, 서브쿼리나 조인 등을 사용하게 된다.
-
-</div>
-</details>
+    - 관리자 계정 생성
+		- 관리자 계정 패스워드 변경
+		- 관리자 계정 로그 조회
+    - 관리자 계정 로그 생성
+    - 로그인(Spring Security)
+    - 로그아웃(Spring Security)
+  - 익명 게시판
+		- 게시글 리스트 조회
+		- 게시글 상세보기
+		- 게시글 생성
+		- 게시글 수정
+		- 게시글 삭제
+		- 관리자에 의한 게시글 삭제
+  - 댓글 대댓글
+		- 게시글에 달려있는 댓글 대댓글 리스트 조회
+		- 댓글 대댓글 생성
+		- 댓글 대댓글 삭제
+		- 관리자에 의한 댓글 대댓글 삭제
 
 <br />
 
 ### Model
 
-> 모델 작성
-
 <details>
-<summary>모델 펼치기 / 접기</summary>
+<summary>Model 펼치기 / 접기</summary>
 <div markdown="1">
 
-```
-public class AdminUserModel {
-	private Integer idx;
-	private String username;
-	private String passwd;
-	private Date created_date;
+<img width="100%" src="./images/UserModel.png" alt="UserModel" title="UserModel">
 
-	public Integer getIdx() {
-		return idx;
-	}
-	public void setIdx(Integer idx) {
-		this.idx = idx;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPasswd() {
-		return passwd;
-	}
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
-	public Date getCreated_date() {
-		return created_date;
-	}
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-}
-```
+<br />
 
-```
-public class AdminUserLogModel {
-	private Integer idx;
-	private Integer conn_id;
-	private String conn_addr;
-	private Date created_date;
+<img width="100%" src="./images/UserLogModel.png" alt="UserLogModel" title="UserLogModel">
 
-	public Integer getIdx() {
-		return idx;
-	}
-	public void setIdx(Integer idx) {
-		this.idx = idx;
-	}
-	public Integer getConn_id() {
-		return conn_id;
-	}
-	public void setConn_id(Integer conn_id) {
-		this.conn_id = conn_id;
-	}
-	public String getConn_addr() {
-		return conn_addr;
-	}
-	public void setConn_addr(String conn_addr) {
-		this.conn_addr = conn_addr;
-	}
-	public Date getCreated_date() {
-		return created_date;
-	}
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-}
-```
+<br />
 
-```
-public class BoardModel {
-	private Integer idx;
-	private String writer;
-	private String title;
-	private String contents;
-	private String passwd;
-	private Date created_date;
-	private Date updated_date;
-	private String type_code;
+<img width="100%" src="./images/BoardModel.png" alt="BoardModel" title="BoardModel">
 
-	public Integer getIdx() {
-		return idx;
-	}
-	public void setIdx(Integer idx) {
-		this.idx = idx;
-	}
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getContents() {
-		return contents;
-	}
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
-	public String getPasswd() {
-		return passwd;
-	}
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
-	public Date getCreated_date() {
-		return created_date;
-	}
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-	public Date getUpdated_date() {
-		return updated_date;
-	}
-	public void setUpdated_date(Date updated_date) {
-		this.updated_date = updated_date;
-	}
-	public String getType_code() {
-		return type_code;
-	}
-	public void setType_code(String type_code) {
-		this.type_code = type_code;
-	}
-}
-```
+<br />
 
-```
-public class ReplyModel {
-	private Integer idx;
-	private String writer;
-	private String contents;
-	private String passwd;
-	private Integer post_num;
-	private Date created_date;
-	private Date updated_date;
-	private Integer step;
-	private Integer reply_num;
-	private Integer group_num;
-
-	public Integer getIdx() {
-		return idx;
-	}
-	public void setIdx(Integer idx) {
-		this.idx = idx;
-	}
-	public String getWriter() {
-		return writer;
-	}
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
-	public String getContents() {
-		return contents;
-	}
-	public void setContents(String contents) {
-		this.contents = contents;
-	}
-	public String getPasswd() {
-		return passwd;
-	}
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
-	public Integer getPost_num() {
-		return post_num;
-	}
-	public void setPost_num(Integer post_num) {
-		this.post_num = post_num;
-	}
-	public Date getCreated_date() {
-		return created_date;
-	}
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-	public Date getUpdated_date() {
-		return updated_date;
-	}
-	public void setUpdated_date(Date updated_date) {
-		this.updated_date = updated_date;
-	}
-	public Integer getStep() {
-		return step;
-	}
-	public void setStep(Integer step) {
-		this.step = step;
-	}
-	public Integer getReply_num() {
-		return reply_num;
-	}
-	public void setReply_num(Integer reply_num) {
-		this.reply_num = reply_num;
-	}
-	public Integer getGroup_num() {
-		return group_num;
-	}
-	public void setGroup_num(Integer group_num) {
-		this.group_num = group_num;
-	}
-}
-```
+<img width="100%" src="./images/ReplyModel.png" alt="ReplyModel" title="ReplyModel">
 
 </div>
 </details>
@@ -604,88 +348,23 @@ public class ReplyModel {
 
 ### Mapper
 
-> 맵퍼 작성
-
 <details>
-<summary>맵퍼 펼치기 / 접기</summary>
+<summary>Mapper 펼치기 / 접기</summary>
 <div markdown="1">
 
-```
-@Mapper
-public interface AdminUserMapper {
+<img width="100%" src="./images/UserMapper.png" alt="UserMapper" title="UserMapper">
 
-	public List<Map<String, Object>> getUserList();
+<br />
 
-	public AdminUserModel getUser(Integer idx);
+<img width="100%" src="./images/UserLogMapper.png" alt="UserLogMapper" title="UserLogMapper">
 
-	public AdminUserModel getUserPasswd(Integer idx);
+<br />
 
-	public boolean validateUserPasswd(AdminUserModel params);
+<img width="100%" src="./images/BoardMapper.png" alt="BoardMapper" title="BoardMapper">
 
-	public int create(AdminUserModel user);
+<br />
 
-	public void update(AdminUserModel user);
-
-	public void delete(AdminUserModel user);
-
-}
-```
-
-```
-@Mapper
-public interface AdminUserLogMapper {
-
-	public List<Map<String, Object>> getLogList();
-
-	public AdminUserLogModel getLog(Integer idx);
-
-	public int create(AdminUserLogModel log);
-
-	public void update(AdminUserLogModel log);
-
-	public void delete(Integer idx);
-
-}
-```
-
-```
-@Mapper
-public interface BoardMapper {
-
-	public List<Map<String, Object>> getBoardListAll();
-
-	public List<Map<String, Object>> getBoardListByType(String type_code);
-
-	public BoardModel getBoard(Integer idx);
-
-	public boolean validateBoardPasswd(BoardModel params);
-
-	public int create(BoardModel board);
-
-	public void update(BoardModel board);
-
-	public void delete(Integer idx);
-
-}
-```
-
-```
-@Mapper
-public interface ReplyMapper {
-
-	public List<Map<String, Object>> getReplyList(Integer post_num);
-
-	public ReplyModel getReply(Integer idx);
-
-	public boolean validatePasswd(ReplyModel params);
-
-	public int create(ReplyModel reply);
-
-	public void update(ReplyModel reply);
-
-	public void delete(Integer idx);
-}
-```
+<img width="100%" src="./images/ReplyMapper.png" alt="ReplyMapper" title="ReplyMapper">
 
 </div>
 </details>
@@ -694,399 +373,24 @@ public interface ReplyMapper {
 
 ### Service
 
-> 서비스 작성
-
 <details>
 <summary>서비스 펼치기 / 접기</summary>
 <div markdown="1">
 
-```
-@Service
-public class AdminUserService extends BaseService {
+<img width="100%" src="./images/UserService.png" alt="UserService" title="UserService">
 
-	@Autowired
-	public AdminUserMapper adminUserMapper;
+<br />
 
-	public List<Map<String, Object>> getList() {
+<img width="100%" src="./images/UserLogService.png" alt="UserLogService" title="UserLogService">
 
-		try {
+<br />
 
-			return adminUserMapper.getUserList();
+<img width="100%" src="./images/BoardService.png" alt="BoardService" title="BoardService">
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+<br />
 
-	public AdminUserModel getUser(Integer idx) {
-		try {
+<img width="100%" src="./images/ReplyService.png" alt="ReplyService" title="ReplyService">
 
-			return adminUserMapper.getUser(idx);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean validatePasswd(String username, String passwd) {
-		try {
-
-			AdminUserModel param = new AdminUserModel();
-			param.setUsername(username);
-			param.setPasswd(passwd);
-
-			return adminUserMapper.validateUserPasswd(param);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public AdminUserModel createUser(String username, String passwd) {
-		try {
-
-			AdminUserModel user = new AdminUserModel();
-			user.setUsername(username);
-			user.setPasswd(passwd);
-
-			adminUserMapper.create(user);
-			return user;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public AdminUserModel updateUser(Integer idx, String username) {
-		try {
-
-			AdminUserModel user = getUser(idx);
-			user.setUsername(username);
-			adminUserMapper.update(user);
-
-			return user;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean deleteUser(Integer idx) {
-		try {
-
-			AdminUserModel adminUser = new AdminUserModel();
-			adminUserMapper.delete(adminUser);
-
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-}
-```
-
-```
-@Service
-public class AdminUserLogService extends BaseService {
-
-	@Autowired
-	private AdminUserLogMapper adminUserLogMapper;
-
-	public List<Map<String, Object>> getUserLogList() {
-		try {
-			return adminUserLogMapper.getLogList();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public AdminUserLogModel getUserLog(Integer idx) {
-		try {
-			return adminUserLogMapper.getLog(idx);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public AdminUserLogModel createUserLog(Integer conn_id, String conn_addr) {
-		try {
-
-			AdminUserLogModel adminUserLog = new AdminUserLogModel();
-			adminUserLog.setConn_id(conn_id);
-			adminUserLog.setConn_addr(conn_addr);
-
-			adminUserLogMapper.create(adminUserLog);
-
-			return adminUserLog;
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public AdminUserLogModel updateUserLog(Integer idx, Integer conn_id, String conn_addr) {
-		try {
-			AdminUserLogModel adminUserLog = getUserLog(idx);
-			adminUserLog.setConn_id(conn_id);
-			adminUserLog.setConn_addr(conn_addr);
-
-			adminUserLogMapper.update(adminUserLog);
-
-			return adminUserLog;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean deleteUserLog(Integer idx) {
-		try {
-			adminUserLogMapper.delete(idx);
-			return true;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-}
-```
-
-```
-@Service
-public class BoardService extends BaseService {
-
-	@Autowired
-	private BoardMapper boardMapper;
-
-	public List<Map<String, Object>> getBoardListAll() {
-		try {
-			return boardMapper.getBoardListAll();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public List<Map<String, Object>> getBoardListByType(String type_code) {
-		try {
-			return boardMapper.getBoardListByType(type_code);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public BoardModel getBoard(Integer idx) {
-		try {
-
-			BoardModel result = boardMapper.getBoard(idx);
-			return result;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean validatePasswd(Integer idx, String passwd) {
-		try {
-			BoardModel params = new BoardModel();
-			params.setIdx(idx);
-			params.setPasswd(passwd);
-
-			boolean result = boardMapper.validateBoardPasswd(params);
-
-			return result;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-	}
-
-	public BoardModel createBoard(String writer, String title, String contents, String passwd, String type_code) {
-		try {
-
-			BoardModel board = new BoardModel();
-			board.setWriter(writer);
-			board.setTitle(title);
-			board.setContents(contents);
-			board.setPasswd(passwd);
-			board.setType_code(type_code);
-
-			boardMapper.create(board);
-
-			return board;
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public BoardModel updateBoard(Integer idx, String title, String contents, String passwd, String type_code) {
-		try {
-
-			boolean isValid = validatePasswd(idx, passwd);
-
-			if(isValid) {
-				BoardModel board = getBoard(idx);
-				board.setTitle(title);
-				board.setContents(contents);
-				board.setPasswd(passwd);
-				board.setType_code(type_code);
-
-				boardMapper.update(board);
-
-				return board;
-			} else {
-				return null;
-			}
-
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean deleteBoard(Integer idx, String passwd) {
-		try {
-
-			boolean isValid = validatePasswd(idx, passwd);
-
-			if(isValid) {
-				boardMapper.delete(idx);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-}
-```
-
-```
-@Service
-public class ReplyService extends BaseService {
-
-	@Autowired
-	private ReplyMapper replyMapper;
-
-	public List<Map<String, Object>> getReplyListByPostNum(Integer post_num) {
-		try {
-			return replyMapper.getReplyList(post_num);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public ReplyModel getReply(Integer idx) {
-		try {
-
-			ReplyModel result = replyMapper.getReply(idx);
-			return result;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean validatePasswd(Integer idx, String passwd) {
-		try {
-			ReplyModel params = new ReplyModel();
-			params.setIdx(idx);
-			params.setPasswd(passwd);
-
-			boolean result = replyMapper.validatePasswd(params);
-
-			return result;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-	}
-
-	public ReplyModel createReply(String writer, String contents, Integer post_num, String passwd, Integer step, Integer reply_num, Integer group_num) {
-		try {
-
-			ReplyModel reply = new ReplyModel();
-			reply.setWriter(writer);
-			reply.setContents(contents);
-			reply.setPost_num(post_num);
-			reply.setPasswd(passwd);
-			reply.setStep(step);
-			reply.setReply_num(reply_num);
-			reply.setGroup_num(group_num);
-
-			replyMapper.create(reply);
-
-			return reply;
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public ReplyModel updateReply(Integer idx, String contents, String passwd) {
-		try {
-
-			ReplyModel reply = getReply(idx);
-
-			if(!reply.getPasswd().equals(passwd)) {
-				return null;
-			}
-
-			reply.setContents(contents);
-			reply.setPasswd(passwd);
-
-			replyMapper.update(reply);
-
-			return reply;
-
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public boolean deleteReply(Integer idx, String passwd) {
-		try {
-
-			boolean isValid = validatePasswd(idx, passwd);
-
-			if(isValid) {
-				replyMapper.delete(idx);
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-}
-```
 
 </div>
 </details>
@@ -1095,304 +399,19 @@ public class ReplyService extends BaseService {
 
 ### Controller
 
-> 컨트롤러 작성
-
 <details>
 <summary>컨트롤러 펼치기 / 접기</summary>
 <div markdown="1">
 
-```
-@Controller
-@RequestMapping("/api")
-public class ApiController extends BaseController {
+<img width="100%" src="./images/AdminController.png" alt="AdminController" title="AdminController">
 
-  @Autowired
-	private AdminUserService adminUserService;
+<br />
 
-	@Autowired
-	private AdminUserLogService adminUserLogService;
+<img width="100%" src="./images/BoardController.png" alt="BoardController" title="BoardController">
 
-	@Autowired
-	private BoardService boardService;
+<br />
 
-	@Autowired
-	private ReplyService replyService;
-
-  /**
-	 * 관리자 계정 리스트 조회
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/userList", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseData> getAdminUserList() throws Exception {
-
-		List<Map<String, Object>> result = null;
-
-		result = adminUserService.getList();
-
-
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-
-	/**
-	 * 관리자 계정 생성
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/createAdminUser", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> createAdminUser(
-			@RequestParam(value = "username", required = true) String username,
-			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
-
-		AdminUserModel result = adminUserService.createUser(username, passwd);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 업데이트
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/updateAdminUser", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> updateAdminUser(
-			@RequestParam(value = "idx", required = true) Integer idx,
-			@RequestParam(value = "username", required = true) String username) throws Exception {
-
-		AdminUserModel result = adminUserService.updateUser(idx, username);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 삭제
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/deleteAdminUser", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> deleteAdminUser(
-			@RequestParam(value = "idx", required = true) Integer idx) throws Exception {
-
-		boolean result = adminUserService.deleteUser(idx);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 로그 리스트 조회
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/userLogList", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseData> getAdminUserLogList() throws Exception {
-
-		List<Map<String, Object>> result = null;
-
-		result = adminUserLogService.getUserLogList();
-
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 로그 생성
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/createAdminUserLog", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> createAdminUserLog(
-			@RequestParam(value = "conn_id", required = true) Integer conn_id,
-			@RequestParam(value = "conn_addr", required = true) String conn_addr) throws Exception {
-
-		AdminUserLogModel result = adminUserLogService.createUserLog(conn_id, conn_addr);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 로그 업데이트
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/updateAdminUserLog", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> updateAdminUserLog(
-			@RequestParam(value = "conn_id", required = true) Integer idx,
-			@RequestParam(value = "conn_id", required = true) Integer conn_id,
-			@RequestParam(value = "conn_addr", required = true) String conn_addr) throws Exception {
-
-		AdminUserLogModel result = adminUserLogService.updateUserLog(idx, conn_id, conn_addr);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 관리자 계정 로그 삭제
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/admin/deleteAdminUserLog", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> deleteAdminUserLog(
-			@RequestParam(value = "idx", required = true) Integer idx) throws Exception {
-
-		boolean result = adminUserLogService.deleteUserLog(idx);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 타입 코드 별 익명 게시글 리스트 조회
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/boardList", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseData> getBoardList(String type_code) throws Exception {
-
-		List<Map<String, Object>> result = null;
-
-		result = boardService.getBoardListByType(type_code);
-
-		return new ResponseEntity<ResponseData>(responseBody(result), HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 게시글 생성
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/createBoard", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> createBoard(
-			@RequestParam(value = "writer", required = true) String writer,
-			@RequestParam(value = "title", required = true) String title,
-			@RequestParam(value = "contents", required = true) String contents,
-			@RequestParam(value = "passwd", required = true) String passwd,
-			@RequestParam(value = "type_code", required = true) String type_code) throws Exception {
-
-		BoardModel result = boardService.createBoard(writer, title, contents, passwd, type_code);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 게시글 업데이트
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/updateBoard", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> updateBoard(
-			@RequestParam(value = "idx", required = true) Integer idx,
-			@RequestParam(value = "title", required = true) String title,
-			@RequestParam(value = "contents", required = true) String contents,
-			@RequestParam(value = "passwd", required = true) String passwd,
-			@RequestParam(value = "type_code", required = true) String type_code) throws Exception {
-
-		BoardModel result = boardService.updateBoard(idx, title, contents, passwd, type_code);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 게시글 삭제
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/deleteBoard", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> deleteBoard(
-			@RequestParam(value = "idx", required = true) Integer idx,
-			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
-
-		boolean result = boardService.deleteBoard(idx, passwd);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 게시글에 달린 댓글 대댓글 조회
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/ReplyList", method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ResponseData> getReplyListByPostNum(Integer post_num) throws Exception {
-
-		List<Map<String, Object>> result = null;
-
-		result = replyService.getReplyListByPostNum(post_num);
-
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 댓글 대댓글 생성
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/anonymous/createReply", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> createReply(
-			@RequestParam(value = "writer", required = true) String writer,
-			@RequestParam(value = "contents", required = true) String contents,
-			@RequestParam(value = "post_num", required = true) Integer post_num,
-			@RequestParam(value = "passwd", required = true) String passwd,
-			@RequestParam(value = "step", required = true) Integer step,
-			@RequestParam(value = "reply_num", required = true) Integer reply_num,
-			@RequestParam(value = "group_num", required = true) Integer group_num) throws Exception {
-
-		ReplyModel result = replyService.createReply(writer, contents, post_num, passwd, step, reply_num, group_num);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 댓글 대댓글 업데이트
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-
-	@RequestMapping(value = "/anonymous/updateReply", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> updateReply(
-			@RequestParam(value = "idx", required = true) Integer idx,
-			@RequestParam(value = "contents", required = true) String contents,
-			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
-
-		ReplyModel result = replyService.updateReply(idx, contents, passwd);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-
-	/**
-	 * 익명 댓글 대댓글 삭제
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-
-	@RequestMapping(value = "/anonymous/deleteReply", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ResponseData> deleteReply(
-			@RequestParam(value = "idx", required = true) Integer idx,
-			@RequestParam(value = "passwd", required = true) String passwd) throws Exception {
-
-		boolean result = replyService.deleteReply(idx, passwd);
-		return new ResponseEntity<ResponseData>(responseBody(result),
-				HttpStatus.OK);
-	}
-}
-```
+<img width="100%" src="./images/.png" alt="" title="ReplyController">
 
 </div>
 </details>
