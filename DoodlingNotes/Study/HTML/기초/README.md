@@ -61,7 +61,7 @@
 ### 이미지, image
 
 ```
-    <image src="#" alt="" />
+    <img src="#" alt="" />
 
     src 속성에는 이미지의 상대경로, 혹은 이미지 경로를 넣어줌
     alt 속성은 alternative text, 대체 텍스트라는 의미
