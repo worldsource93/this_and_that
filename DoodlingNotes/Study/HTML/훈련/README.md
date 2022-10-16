@@ -39,3 +39,23 @@
 <img src="./images/product_card.png">
 
 ---
+
+### Instagram User Profile
+
+<img src="./images/instagram_user_profile.png">
+
+---
+
+### Receipt
+
+<img src="./images/receipt.png">
+
+---
+
+### Github Dropdown Menu
+
+<img src="./images/github_dropdown_menu1.png">
+
+<img src="./images/github_dropdown_menu2.png">
+
+---
