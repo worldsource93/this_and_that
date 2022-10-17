@@ -79,3 +79,10 @@
 <img src="./images/music_player.png">
 
 ---
+
+### Video Player
+
+<img src="./images/video_player1.png">
+<img src="./images/video_player2.png">
+
+---
