@@ -1,8 +1,14 @@
-## 잡동사니 목록
+## 목차
 
-- ### [Retrospective](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Retrospective)
-
+<!-- - ### [Retrospective](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Retrospective) -->
+<!-- 
   > 개인 및 프로젝트 회고 저장소
+
+    <br /> -->
+
+- ### [Study](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Study)
+
+  > 개인공부 저장소
 
     <br />
 
@@ -14,7 +20,7 @@
 
 - ### [Books](https://github.com/worldsource93/this_and_that/tree/main/DoodlingNotes/Books)
 
-  > 책 감상 및 기억하고 싶은 내용 저장소
+  > 책 내용정리
 
   - 코어 자바스크립트
   - 모던 자바스크립트 Deep Dive
