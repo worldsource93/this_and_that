@@ -1,1 +1,74 @@
 /* ▼ WHERE YOUR CODE BEGINS */
+
+* {
+    box-sizing: content-box;
+    margin: 0;
+}
+
+body {
+    font-family: 'Mulish', sans-serif;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 216px;
+}
+
+.loading-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3333333333;
+    color: #151B26;
+    text-align: center;
+    animation: flicker 1600ms infinite alternate;
+}
+
+.progress-bar {
+    position: relative;
+    width: 300px;
+    height: 12px;
+    border-radius: 100px;
+    background-color: #E5EAFE;
+    overflow: hidden;
+}
+
+.progress-bar-gauge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 12px;
+    background-color: #13CE66;
+    animation: loading-bar 1600ms ease-out infinite;
+}
+
+@keyframes flicker {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes loading-bar {
+    0% {
+        width: 0;
+    }
+
+    80% {
+        width: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        width: 100%;
+        opacity: 0;
+    }
+}
