@@ -20,3 +20,37 @@
 1. 상속 다루기
 
 ---
+
+### <strong>1. 리팩터링: 첫 번째 예시</strong>
+
+<pre>
+    <code>
+        // play.json
+        {
+            'hamlet': {
+                'name': 'Hamlet',
+                'type': 'tragedy'
+            },
+            'as-like': {
+                'name': 'As You Like It',
+                'type': 'comedy'
+            },
+            'othello': {
+                'name': 'Othello',
+                'type': 'tragedy'
+            }
+        }
+    </code>
+</pre>
+
+<pre>
+    <code>
+        // invoices.json
+        [
+            {
+                'customer': 'BigCo',
+                
+            }
+        ]
+    </code>
+</pre>
